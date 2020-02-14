@@ -14,10 +14,6 @@ public class ContactsClient extends AbstractClient {
   }
 
   public Contact getByEmail(String email) {
-    System.out.println(contactTarget.path("contact/email/" + email + "/profile").queryParam("hapikey", apiKey)
-        .request(MediaType.APPLICATION_JSON)
-        .get()
-        .readEntity(String.class));
     return contactTarget.path("contact/email/" + email + "/profile").queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
         .get(Contact.class);
