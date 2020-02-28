@@ -13,7 +13,7 @@ Add the following Maven dependency:
 ```xml
 <dependency>
     <groupId>com.impactupgrade.integration</groupId>
-    <artifactId>donor-tools-api-java</artifactId>
+    <artifactId>hubspot-java-client</artifactId>
     <version>1.0.0.Final</version>
 </dependency>
 ```
