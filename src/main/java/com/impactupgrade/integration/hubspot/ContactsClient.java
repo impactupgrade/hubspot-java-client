@@ -7,14 +7,16 @@ import javax.ws.rs.core.MediaType;
 
 public class ContactsClient extends AbstractClient {
 
-  private final WebTarget contactTarget = target.path("contacts/v1");
+  private final WebTarget contactsTarget = target.path("contacts/v1");
 
   public ContactsClient(String apiKey) {
     super(apiKey);
   }
 
   public Contact getByEmail(String email) {
-    return contactTarget.path("contact/email/" + email + "/profile").queryParam("hapikey", apiKey)
+    return contactsTarget
+        .path("contact/email/" + email + "/profile")
+        .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
         .get(Contact.class);
   }

@@ -5,6 +5,7 @@ public class ContactProperties implements AbstractModel {
   private HasValue<String> firstname;
   private HasValue<String> lastname;
   private HasValue<String> email;
+  private HasValue<String> phone;
 
   public HasValue<String> getFirstname() {
     return firstname;
@@ -30,12 +31,21 @@ public class ContactProperties implements AbstractModel {
     this.email = email;
   }
 
+  public HasValue<String> getPhone() {
+    return phone;
+  }
+
+  public void setPhone(HasValue<String> phone) {
+    this.phone = phone;
+  }
+
   @Override
   public String toString() {
     return "ContactProperties{" +
         "firstname=" + firstname +
         ", lastname=" + lastname +
         ", email=" + email +
+        ", phone=" + phone +
         '}';
   }
 }

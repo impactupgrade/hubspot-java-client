@@ -11,4 +11,8 @@ public class HubSpotClient {
   public ContactsClient contacts() {
     return new ContactsClient(apiKey);
   }
+
+  public ListsClient lists() {
+    return new ListsClient(apiKey);
+  }
 }
