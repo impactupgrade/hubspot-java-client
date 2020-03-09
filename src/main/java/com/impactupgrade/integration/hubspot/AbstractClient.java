@@ -20,7 +20,7 @@ public abstract class AbstractClient {
 
     Logger logger = Logger.getLogger(this.getClass().getName());
     Feature loggingFeature = new LoggingFeature(
-        logger, Level.INFO, LoggingFeature.Verbosity.PAYLOAD_TEXT, LoggingFeature.DEFAULT_MAX_ENTITY_SIZE);
+        logger, Level.FINE, LoggingFeature.Verbosity.PAYLOAD_TEXT, LoggingFeature.DEFAULT_MAX_ENTITY_SIZE);
 
     Client client = ClientBuilder.newBuilder()
         .register(loggingFeature)
