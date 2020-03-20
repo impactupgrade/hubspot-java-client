@@ -56,7 +56,7 @@ public class ListsClient extends AbstractClient {
 
     if (contactArray.isHasMore()) {
       // iterate through all remaining pages
-      contactArray.getContacts().addAll(getContactsInList(contactArray.getOffset()).getContacts());
+      contactArray.getContacts().addAll(getContactsInList(listId, contactArray.getOffset()).getContacts());
     }
 
     return contactArray;
