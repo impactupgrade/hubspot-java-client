@@ -56,4 +56,4 @@ TODO
 
 ## License
 
-Licensed under the GNU LESSER GENERAL PUBLIC LICENSE (LGPL) V3.  See lgpl-3.0.txt for more information.
+Licensed under the Apache License 2.0. See LICENSE for more information.

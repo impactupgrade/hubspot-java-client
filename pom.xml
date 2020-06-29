@@ -8,14 +8,16 @@
   <artifactId>hubspot-java-client</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 
+  <name>hubspot-java-client</name>
+  <description>TODO</description>
   <url>https://github.com/impactupgrade/hubspot-java-client</url>
   <scm>
     <url>https://github.com/impactupgrade/hubspot-java-client</url>
   </scm>
   <licenses>
     <license>
-      <name>GNU LESSER GENERAL PUBLIC LICENSE V3</name>
-      <url>https://github.com/impactupgrade/hubspot-java-client/blob/master/lgpl-3.0.txt</url>
+      <name>Apache License 2.0</name>
+      <url>https://github.com/impactupgrade/paymentspring-java-client/blob/master/LICENSE</url>
     </license>
   </licenses>
   <developers>
