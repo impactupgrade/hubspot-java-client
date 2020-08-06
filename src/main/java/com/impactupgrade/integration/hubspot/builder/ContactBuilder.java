@@ -30,6 +30,51 @@ public class ContactBuilder {
     return this;
   }
 
+  public ContactBuilder home_phone(String home_phone) {
+    properties.add(new PropertyRequest("home_phone", home_phone));
+    return this;
+  }
+
+  public ContactBuilder mobile_phone(String mobile_phone) {
+    properties.add(new PropertyRequest("mobile_phone", mobile_phone));
+    return this;
+  }
+
+  public ContactBuilder work_phone(String work_phone) {
+    properties.add(new PropertyRequest("work_phone", work_phone));
+    return this;
+  }
+
+  public ContactBuilder preferred_phone(String preferred_phone) {
+    properties.add(new PropertyRequest("preferred_phone", preferred_phone));
+    return this;
+  }
+  
+  public ContactBuilder address(String address) {
+    properties.add(new PropertyRequest("address", address));
+    return this;
+  }
+
+  public ContactBuilder city(String city) {
+    properties.add(new PropertyRequest("city", city));
+    return this;
+  }
+
+  public ContactBuilder state(String state) {
+    properties.add(new PropertyRequest("state", state));
+    return this;
+  }
+
+  public ContactBuilder zip(String zip) {
+    properties.add(new PropertyRequest("zip", zip));
+    return this;
+  }
+
+  public ContactBuilder country(String country) {
+    properties.add(new PropertyRequest("country", country));
+    return this;
+  }
+
   public ContactRequest build() {
     ContactRequest contactRequest = new ContactRequest();
     contactRequest.setProperties(properties);
