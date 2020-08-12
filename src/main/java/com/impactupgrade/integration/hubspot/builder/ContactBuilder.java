@@ -30,23 +30,23 @@ public class ContactBuilder {
     return this;
   }
 
-  public ContactBuilder home_phone(String home_phone) {
-    properties.add(new PropertyRequest("home_phone", home_phone));
+  public ContactBuilder home_phone(String homePhone) {
+    properties.add(new PropertyRequest("home_phone", homePhone));
     return this;
   }
 
-  public ContactBuilder mobile_phone(String mobile_phone) {
-    properties.add(new PropertyRequest("mobile_phone", mobile_phone));
+  public ContactBuilder mobile_phone(String mobilePhone) {
+    properties.add(new PropertyRequest("mobile_phone", mobilePhone));
     return this;
   }
 
-  public ContactBuilder work_phone(String work_phone) {
-    properties.add(new PropertyRequest("work_phone", work_phone));
+  public ContactBuilder work_phone(String workPhone) {
+    properties.add(new PropertyRequest("work_phone", workPhone));
     return this;
   }
 
-  public ContactBuilder preferred_phone(String preferred_phone) {
-    properties.add(new PropertyRequest("preferred_phone", preferred_phone));
+  public ContactBuilder preferred_phone(String preferredPhone) {
+    properties.add(new PropertyRequest("preferred_phone", preferredPhone));
     return this;
   }
   
