@@ -21,12 +21,11 @@ public class ContactsClient extends AbstractClient {
   }
 
   public Contact getByEmail(String email) {
-    Contact c = contactsTarget
+    return contactsTarget
         .path("contact/email/" + email + "/profile")
         .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
         .get(Contact.class);
-    return c;
   }
 
   public Contact insert(ContactBuilder contactBuilder) throws DuplicateContactException, HubSpotException {
@@ -58,9 +57,5 @@ public class ContactsClient extends AbstractClient {
         .post(Entity.entity(req, MediaType.APPLICATION_JSON));
 
     return response.readEntity(Contact.class);
-  }
-
-  public static void main(String[] args) {
-    // new ContactsClient("56fac03b-0260-411b-9f8d-ad9c77746da9").getByEmail("brett.e.meyer@gmail.com");
   }
 }

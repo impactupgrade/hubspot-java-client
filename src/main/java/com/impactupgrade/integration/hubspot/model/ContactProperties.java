@@ -6,9 +6,7 @@ public class ContactProperties implements AbstractModel {
 
   private HasValue<String> firstname;
   private HasValue<String> lastname;
-  @JsonProperty("email") 
   private HasValue<String> email;
-  @JsonProperty("phone") 
   private HasValue<String> phone;
   @JsonProperty("home_phone")
   private HasValue<String> homePhone;
@@ -18,22 +16,17 @@ public class ContactProperties implements AbstractModel {
   private HasValue<String> workPhone;
   @JsonProperty("preferred_phone") 
   private HasValue<String> preferredPhone;
-  @JsonProperty("address") 
   private HasValue<String> address;
-  @JsonProperty("city") 
   private HasValue<String> city;
-  @JsonProperty("state") 
   private HasValue<String> state;
-  @JsonProperty("zip") 
   private HasValue<String> zip;
-  @JsonProperty("country") 
   private HasValue<String> country;
 
   public HasValue<String> getFirstName() {
     return firstname;
   }
 
-  public void setFirstname(HasValue<String> firstname) {
+  public void setFirstName(HasValue<String> firstname) {
     this.firstname = firstname;
   }
 
@@ -41,7 +34,7 @@ public class ContactProperties implements AbstractModel {
     return lastname;
   }
 
-  public void setLastname(HasValue<String> lastname) {
+  public void setLastName(HasValue<String> lastname) {
     this.lastname = lastname;
   }
 
@@ -65,7 +58,7 @@ public class ContactProperties implements AbstractModel {
     return homePhone;
   }
 
-  public void setHome_Phone(HasValue<String> home_phone) {
+  public void setHomePhone(HasValue<String> homePhone) {
     this.homePhone = homePhone;
   }
 
@@ -73,7 +66,7 @@ public class ContactProperties implements AbstractModel {
     return workPhone;
   }
 
-  public void setWork_Phone(HasValue<String> work_phone) {
+  public void setWorkPhone(HasValue<String> workPhone) {
     this.workPhone = workPhone;
   }
 
@@ -81,7 +74,7 @@ public class ContactProperties implements AbstractModel {
     return mobilePhone;
   }
 
-  public void setMobilePhone(HasValue<String> mobile_phone) {
+  public void setMobilePhone(HasValue<String> mobilePhone) {
     this.mobilePhone = mobilePhone;
   }
 
@@ -89,7 +82,7 @@ public class ContactProperties implements AbstractModel {
     return preferredPhone;
   }
 
-  public void setPreferredPhone(HasValue<String> preferred_phone) {
+  public void setPreferredPhone(HasValue<String> preferredPhone) {
     this.preferredPhone = preferredPhone;
   }
 

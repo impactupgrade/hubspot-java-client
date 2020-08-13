@@ -30,22 +30,22 @@ public class ContactBuilder {
     return this;
   }
 
-  public ContactBuilder home_phone(String homePhone) {
+  public ContactBuilder homePhone(String homePhone) {
     properties.add(new PropertyRequest("home_phone", homePhone));
     return this;
   }
 
-  public ContactBuilder mobile_phone(String mobilePhone) {
+  public ContactBuilder mobilePhone(String mobilePhone) {
     properties.add(new PropertyRequest("mobile_phone", mobilePhone));
     return this;
   }
 
-  public ContactBuilder work_phone(String workPhone) {
+  public ContactBuilder workPhone(String workPhone) {
     properties.add(new PropertyRequest("work_phone", workPhone));
     return this;
   }
 
-  public ContactBuilder preferred_phone(String preferredPhone) {
+  public ContactBuilder preferredPhone(String preferredPhone) {
     properties.add(new PropertyRequest("preferred_phone", preferredPhone));
     return this;
   }
