@@ -22,19 +22,19 @@ public class ContactProperties implements AbstractModel {
   private HasValue<String> zip;
   private HasValue<String> country;
 
-  public HasValue<String> getFirstName() {
+  public HasValue<String> getFirstname() {
     return firstname;
   }
 
-  public void setFirstName(HasValue<String> firstname) {
+  public void setFirstname(HasValue<String> firstname) {
     this.firstname = firstname;
   }
 
-  public HasValue<String> getLastName() {
+  public HasValue<String> getLastname() {
     return lastname;
   }
 
-  public void setLastName(HasValue<String> lastname) {
+  public void setLastname(HasValue<String> lastname) {
     this.lastname = lastname;
   }
 
