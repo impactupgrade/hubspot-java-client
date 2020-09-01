@@ -72,4 +72,15 @@ public class ListsClient extends AbstractClient {
         .request(MediaType.APPLICATION_JSON)
         .post(Entity.entity(vidsRequest, MediaType.APPLICATION_JSON));
   }
+
+  public void removeContactFromList(long listId, Long... contactVids) {
+    VidsRequest vidsRequest = new VidsRequest();
+    vidsRequest.setVids(Arrays.asList(contactVids));
+
+    listsTarget
+        .path(listId + "/remove")
+        .queryParam("hapikey", apiKey)
+        .request(MediaType.APPLICATION_JSON)
+        .post(Entity.entity(vidsRequest, MediaType.APPLICATION_JSON));
+  }
 }
