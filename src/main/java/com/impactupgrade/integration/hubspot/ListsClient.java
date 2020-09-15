@@ -7,6 +7,7 @@ import com.impactupgrade.integration.hubspot.model.VidsRequest;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.Arrays;
 
 public class ListsClient extends AbstractClient {
@@ -62,25 +63,29 @@ public class ListsClient extends AbstractClient {
     return contactArray;
   }
 
-  public void addContactToList(long listId, Long... contactVids) {
+  public boolean addContactToList(long listId, Long... contactVids) {
     VidsRequest vidsRequest = new VidsRequest();
     vidsRequest.setVids(Arrays.asList(contactVids));
 
-    listsTarget
+    Response response = listsTarget
         .path(listId + "/add")
         .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
         .post(Entity.entity(vidsRequest, MediaType.APPLICATION_JSON));
+    System.out.println(response.readEntity(String.class));
+    return response.getStatus() == 200;
   }
 
-  public void removeContactFromList(long listId, Long... contactVids) {
+  public boolean removeContactFromList(long listId, Long... contactVids) {
     VidsRequest vidsRequest = new VidsRequest();
     vidsRequest.setVids(Arrays.asList(contactVids));
 
-    listsTarget
+    Response response = listsTarget
         .path(listId + "/remove")
         .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
         .post(Entity.entity(vidsRequest, MediaType.APPLICATION_JSON));
+    System.out.println(response.readEntity(String.class));
+    return response.getStatus() == 200;
   }
 }
