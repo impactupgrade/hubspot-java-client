@@ -58,4 +58,8 @@ public class ContactsClient extends AbstractClient {
 
     return response.readEntity(Contact.class);
   }
+
+  public static void main(String[] args) {
+    System.out.println(new ContactsClient("56fac03b-0260-411b-9f8d-ad9c77746da9").getByEmail("brett.e.meyer@gmail.com"));
+  }
 }

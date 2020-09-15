@@ -2,6 +2,8 @@ package com.impactupgrade.integration.hubspot.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public class Contact implements AbstractModel {
 
   private long vid;
@@ -10,6 +12,8 @@ public class Contact implements AbstractModel {
   @JsonProperty("portal-id")
   private long portalId;
   private ContactProperties properties;
+  @JsonProperty("list-memberships")
+  private List<ContactListMembership> listMemberships;
 
   public long getVid() {
     return vid;
@@ -43,6 +47,14 @@ public class Contact implements AbstractModel {
     this.properties = properties;
   }
 
+  public List<ContactListMembership> getListMemberships() {
+    return listMemberships;
+  }
+
+  public void setListMemberships(List<ContactListMembership> listMemberships) {
+    this.listMemberships = listMemberships;
+  }
+
   @Override
   public String toString() {
     return "Contact{" +
@@ -50,6 +62,7 @@ public class Contact implements AbstractModel {
         ", canonicalVid=" + canonicalVid +
         ", portalId=" + portalId +
         ", properties=" + properties +
+        ", listMemberships=" + listMemberships +
         '}';
   }
 }
