@@ -14,6 +14,10 @@ public class Contact implements AbstractModel {
   private ContactProperties properties;
   @JsonProperty("list-memberships")
   private List<ContactListMembership> listMemberships;
+  @JsonProperty("salesforcecontactid")
+  private String salesforceContactId;
+  @JsonProperty("salesforceaccountid")
+  private String salesforceAccountId;
 
   public long getVid() {
     return vid;
@@ -55,6 +59,22 @@ public class Contact implements AbstractModel {
     this.listMemberships = listMemberships;
   }
 
+  public String getSalesforceContactId() {
+    return salesforceContactId;
+  }
+
+  public void setSalesforceContactId(String salesforceContactId) {
+    this.salesforceContactId = salesforceContactId;
+  }
+
+  public String getSalesforceAccountId() {
+    return salesforceAccountId;
+  }
+
+  public void setSalesforceAccountId(String salesforceAccountId) {
+    this.salesforceAccountId = salesforceAccountId;
+  }
+
   @Override
   public String toString() {
     return "Contact{" +
@@ -63,6 +83,8 @@ public class Contact implements AbstractModel {
         ", portalId=" + portalId +
         ", properties=" + properties +
         ", listMemberships=" + listMemberships +
+        ", salesforceContactId='" + salesforceContactId + '\'' +
+        ", salesforceAccountId='" + salesforceAccountId + '\'' +
         '}';
   }
 }

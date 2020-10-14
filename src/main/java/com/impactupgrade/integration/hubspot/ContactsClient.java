@@ -20,6 +20,14 @@ public class ContactsClient extends AbstractClient {
     super(apiKey);
   }
 
+  public Contact getById(String id) {
+    return contactsTarget
+        .path("contact/vid/" + id + "/profile")
+        .queryParam("hapikey", apiKey)
+        .request(MediaType.APPLICATION_JSON)
+        .get(Contact.class);
+  }
+
   public Contact getByEmail(String email) {
     return contactsTarget
         .path("contact/email/" + email + "/profile")
@@ -46,6 +54,7 @@ public class ContactsClient extends AbstractClient {
     }
   }
 
+  // TODO: Breaking change, but rename this to updateByEmail
   public Contact update(ContactBuilder contactBuilder, String email) {
 
     ContactRequest req = contactBuilder.build();
@@ -59,7 +68,15 @@ public class ContactsClient extends AbstractClient {
     return response.readEntity(Contact.class);
   }
 
-  public static void main(String[] args) {
-    System.out.println(new ContactsClient("56fac03b-0260-411b-9f8d-ad9c77746da9").getByEmail("brett.e.meyer@gmail.com"));
+  public Contact updateById(ContactBuilder contactBuilder, String id) {
+
+    ContactRequest req = contactBuilder.build();
+
+    Response response = contactsTarget
+        .path("contact/vid/" + id + "/profile")
+        .queryParam("hapikey", apiKey)
+        .request(MediaType.APPLICATION_JSON)
+        .post(Entity.entity(req, MediaType.APPLICATION_JSON));
+    return response.readEntity(Contact.class);
   }
 }
