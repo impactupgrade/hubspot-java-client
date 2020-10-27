@@ -4,6 +4,7 @@ import com.impactupgrade.integration.hubspot.builder.ContactBuilder;
 import com.impactupgrade.integration.hubspot.exception.DuplicateContactException;
 import com.impactupgrade.integration.hubspot.exception.HubSpotException;
 import com.impactupgrade.integration.hubspot.model.Contact;
+import com.impactupgrade.integration.hubspot.model.ContactArray;
 import com.impactupgrade.integration.hubspot.model.ContactRequest;
 import com.impactupgrade.integration.hubspot.model.internal.ErrorResponse;
 
@@ -34,6 +35,15 @@ public class ContactsClient extends AbstractClient {
         .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
         .get(Contact.class);
+  }
+
+  public ContactArray search(String q) {
+    return contactsTarget
+        .path("search/query")
+        .queryParam("q", q)
+        .queryParam("hapikey", apiKey)
+        .request(MediaType.APPLICATION_JSON)
+        .get(ContactArray.class);
   }
 
   public Contact insert(ContactBuilder contactBuilder) throws DuplicateContactException, HubSpotException {
