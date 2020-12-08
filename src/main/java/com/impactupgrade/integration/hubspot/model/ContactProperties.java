@@ -21,6 +21,8 @@ public class ContactProperties implements AbstractModel {
   private HasValue<String> state;
   private HasValue<String> zip;
   private HasValue<String> country;
+  @JsonProperty("associatedcompanyid")
+  private HasValue<String> companyId;
 
   public HasValue<String> getFirstname() {
     return firstname;
@@ -126,6 +128,10 @@ public class ContactProperties implements AbstractModel {
     this.country = country;
   }
 
+  public HasValue<String> getCompanyId() { return companyId; }
+
+  public void setCompanyId(HasValue<String> companyId) { this.companyId = companyId; }
+
   @Override
   public String toString() {
     return "ContactProperties{" +
@@ -142,6 +148,7 @@ public class ContactProperties implements AbstractModel {
         ", state=" + state +
         ", zip=" + zip +
         ", country=" + country +
+        ", companyId=" + companyId +
         '}';
   }
 }
