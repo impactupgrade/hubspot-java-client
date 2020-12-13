@@ -56,4 +56,4 @@ TODO
 
 ## License
 
-Licensed under the Apache License 2.0. See LICENSE for more information.
+Licensed under the Apache License, Version 2.0. See LICENSE-2.0.txt for more information.
