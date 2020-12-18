@@ -12,6 +12,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 public class ContactsClient extends AbstractClient {
 
@@ -35,6 +36,15 @@ public class ContactsClient extends AbstractClient {
         .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
         .get(Contact.class);
+  }
+
+  public Response getByEmailBatch(List<String> emails) {
+    return contactsTarget
+            .path("contact/emails/batch/")
+            .queryParam("email", emails.toArray())
+            .queryParam("hapikey", apiKey)
+            .request(MediaType.APPLICATION_JSON)
+            .get();
   }
 
   public ContactArray search(String q) {
