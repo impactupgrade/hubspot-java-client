@@ -1,8 +1,6 @@
 # hubspot-java-client
 
-Working with the Salesforce API can be a **pain**. Although we're old school and can appreciate some of the benefits of strongly-typed SOAP contracts, it's easy to wind up with a solution that's pretty brittle and not resilient.
-
-salesforce-java-tools is the backbone of all our Salesforce integrations. In particular, <a href="https://github.com/impactupgrade/salesforce-java-tools/blob/master/src/main/java/com/impactupgrade/integration/sfdc/SFDCPartnerAPIClient.java">SFDCPartnerAPIClient</a> supports all the bells-and-whistles and hardening we required: mapping between Partner API and Enterprise API objects, batched actions, retries, session/connection caching, and DRY helper methods.
+A work-in-progress Java wrapper around the HubSpot API, including a mix of V1, V2, and V3 endpoints. This one is in its early stages, but significant attention is in the works!
 
 ## Impact Upgrade
 
