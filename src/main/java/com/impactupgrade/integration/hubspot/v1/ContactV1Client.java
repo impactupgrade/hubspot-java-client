@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+@Deprecated
 public class ContactV1Client extends AbstractClient {
 
   private final WebTarget contactsTarget = target.path("contacts/v1");
@@ -23,6 +24,7 @@ public class ContactV1Client extends AbstractClient {
     super(apiKey);
   }
 
+  @Deprecated
   public Contact getById(String id) {
     return contactsTarget
         .path("contact/vid/" + id + "/profile")
@@ -31,6 +33,7 @@ public class ContactV1Client extends AbstractClient {
         .get(Contact.class);
   }
 
+  @Deprecated
   public Contact getByEmail(String email) {
     return contactsTarget
         .path("contact/email/" + email + "/profile")
@@ -39,6 +42,7 @@ public class ContactV1Client extends AbstractClient {
         .get(Contact.class);
   }
 
+  @Deprecated
   public Response getByEmailBatch(List<String> emails) {
     return contactsTarget
             .path("contact/emails/batch/")
@@ -48,6 +52,7 @@ public class ContactV1Client extends AbstractClient {
             .get();
   }
 
+  @Deprecated
   public ContactArray search(String q) {
     return contactsTarget
         .path("search/query")
@@ -57,6 +62,7 @@ public class ContactV1Client extends AbstractClient {
         .get(ContactArray.class);
   }
 
+  @Deprecated
   public Contact insert(ContactBuilder contactBuilder) throws DuplicateContactException, HubSpotException {
     Response response = contactsTarget
         .path("contact")
@@ -75,6 +81,7 @@ public class ContactV1Client extends AbstractClient {
     }
   }
 
+  @Deprecated
   // TODO: Breaking change, but rename this to updateByEmail
   public Contact update(ContactBuilder contactBuilder, String email) {
     ContactRequest req = contactBuilder.build();
@@ -88,6 +95,7 @@ public class ContactV1Client extends AbstractClient {
     return response.readEntity(Contact.class);
   }
 
+  @Deprecated
   public Contact updateById(ContactBuilder contactBuilder, String id) {
     ContactRequest req = contactBuilder.build();
 

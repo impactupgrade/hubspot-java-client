@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
 
+@Deprecated
 public class ContactListV1Client extends AbstractClient {
 
   private final WebTarget listsTarget = target.path("contacts/v1/lists");
@@ -19,6 +20,7 @@ public class ContactListV1Client extends AbstractClient {
     super(apiKey);
   }
 
+  @Deprecated
   public ContactListArray getAll() {
     return getAll(0);
   }
@@ -39,6 +41,7 @@ public class ContactListV1Client extends AbstractClient {
     return contactListArray;
   }
 
+  @Deprecated
   public ContactArray getContactsInList(long listId) {
     return getContactsInList(listId, 0);
   }
@@ -64,6 +67,7 @@ public class ContactListV1Client extends AbstractClient {
     return contactArray;
   }
 
+  @Deprecated
   public boolean addContactToList(long listId, Long... contactVids) {
     VidsRequest vidsRequest = new VidsRequest();
     vidsRequest.setVids(Arrays.asList(contactVids));
@@ -77,6 +81,7 @@ public class ContactListV1Client extends AbstractClient {
     return response.getStatus() == 200;
   }
 
+  @Deprecated
   public boolean removeContactFromList(long listId, Long... contactVids) {
     VidsRequest vidsRequest = new VidsRequest();
     vidsRequest.setVids(Arrays.asList(contactVids));
