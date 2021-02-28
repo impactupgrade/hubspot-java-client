@@ -8,6 +8,7 @@ public class ContactProperties implements AbstractModel {
   private HasValue<String> lastname;
   private HasValue<String> email;
   private HasValue<String> phone;
+  // TODO: are the *_phone fields standard?
   @JsonProperty("home_phone")
   private HasValue<String> homePhone;
   @JsonProperty("mobile_phone") 

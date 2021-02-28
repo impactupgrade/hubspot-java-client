@@ -2,7 +2,7 @@ package com.impactupgrade.integration.hubspot.v1;
 
 import com.impactupgrade.integration.hubspot.AbstractClient;
 import com.impactupgrade.integration.hubspot.v1.builder.ContactBuilder;
-import com.impactupgrade.integration.hubspot.exception.DuplicateContactException;
+import com.impactupgrade.integration.hubspot.v1.exception.DuplicateContactException;
 import com.impactupgrade.integration.hubspot.exception.HubSpotException;
 import com.impactupgrade.integration.hubspot.v1.model.Contact;
 import com.impactupgrade.integration.hubspot.v1.model.ContactArray;

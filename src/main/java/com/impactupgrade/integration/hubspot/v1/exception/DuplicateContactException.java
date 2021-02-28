@@ -1,4 +1,4 @@
-package com.impactupgrade.integration.hubspot.exception;
+package com.impactupgrade.integration.hubspot.v1.exception;
 
 public class DuplicateContactException extends Exception {
 
