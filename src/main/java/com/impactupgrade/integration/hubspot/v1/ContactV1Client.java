@@ -1,12 +1,13 @@
-package com.impactupgrade.integration.hubspot;
+package com.impactupgrade.integration.hubspot.v1;
 
-import com.impactupgrade.integration.hubspot.builder.ContactBuilder;
+import com.impactupgrade.integration.hubspot.AbstractClient;
+import com.impactupgrade.integration.hubspot.v1.builder.ContactBuilder;
 import com.impactupgrade.integration.hubspot.exception.DuplicateContactException;
 import com.impactupgrade.integration.hubspot.exception.HubSpotException;
-import com.impactupgrade.integration.hubspot.model.Contact;
-import com.impactupgrade.integration.hubspot.model.ContactArray;
-import com.impactupgrade.integration.hubspot.model.ContactRequest;
-import com.impactupgrade.integration.hubspot.model.internal.ErrorResponse;
+import com.impactupgrade.integration.hubspot.v1.model.Contact;
+import com.impactupgrade.integration.hubspot.v1.model.ContactArray;
+import com.impactupgrade.integration.hubspot.v1.model.ContactRequest;
+import com.impactupgrade.integration.hubspot.v1.model.internal.ErrorResponse;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -14,11 +15,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-public class ContactsClient extends AbstractClient {
+public class ContactV1Client extends AbstractClient {
 
   private final WebTarget contactsTarget = target.path("contacts/v1");
 
-  public ContactsClient(String apiKey) {
+  public ContactV1Client(String apiKey) {
     super(apiKey);
   }
 
@@ -76,7 +77,6 @@ public class ContactsClient extends AbstractClient {
 
   // TODO: Breaking change, but rename this to updateByEmail
   public Contact update(ContactBuilder contactBuilder, String email) {
-
     ContactRequest req = contactBuilder.build();
 
     Response response = contactsTarget
@@ -89,7 +89,6 @@ public class ContactsClient extends AbstractClient {
   }
 
   public Contact updateById(ContactBuilder contactBuilder, String id) {
-
     ContactRequest req = contactBuilder.build();
 
     Response response = contactsTarget

@@ -1,4 +1,4 @@
-package com.impactupgrade.integration.hubspot.model;
+package com.impactupgrade.integration.hubspot.v1.model;
 
 public class PropertyRequest implements AbstractModel {
 

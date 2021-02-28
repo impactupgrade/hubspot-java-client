@@ -1,4 +1,4 @@
-package com.impactupgrade.integration.hubspot.model;
+package com.impactupgrade.integration.hubspot.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,6 +14,8 @@ public class Contact implements AbstractModel {
   private ContactProperties properties;
   @JsonProperty("list-memberships")
   private List<ContactListMembership> listMemberships;
+
+  // TODO: Remove? Specific to an Impact Upgrade client or two...
   @JsonProperty("salesforcecontactid")
   private String salesforceContactId;
   @JsonProperty("salesforceaccountid")

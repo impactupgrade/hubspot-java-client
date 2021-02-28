@@ -1,11 +1,12 @@
-package com.impactupgrade.integration.hubspot.builder;
+package com.impactupgrade.integration.hubspot.v1.builder;
 
-import com.impactupgrade.integration.hubspot.model.ContactRequest;
-import com.impactupgrade.integration.hubspot.model.PropertyRequest;
+import com.impactupgrade.integration.hubspot.v1.model.ContactRequest;
+import com.impactupgrade.integration.hubspot.v1.model.PropertyRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Could we instead use Contact/ContactProperties?
 public class ContactBuilder {
 
   private final List<PropertyRequest> properties = new ArrayList<>();

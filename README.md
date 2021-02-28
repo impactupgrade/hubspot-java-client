@@ -1,6 +1,6 @@
 # hubspot-java-client
 
-A work-in-progress Java wrapper around the HubSpot API, including a mix of V1, V2, and V3 endpoints. This one is in its early stages, but significant attention is in the works!
+A work-in-progress Java wrapper around the HubSpot API, including a mix of V1 and V3 endpoints. This one is in its early stages, but significant attention is in the works!
 
 ## Impact Upgrade
 

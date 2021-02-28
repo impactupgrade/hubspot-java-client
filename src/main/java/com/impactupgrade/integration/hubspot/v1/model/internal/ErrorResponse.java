@@ -1,6 +1,6 @@
-package com.impactupgrade.integration.hubspot.model.internal;
+package com.impactupgrade.integration.hubspot.v1.model.internal;
 
-import com.impactupgrade.integration.hubspot.model.AbstractModel;
+import com.impactupgrade.integration.hubspot.v1.model.AbstractModel;
 
 public class ErrorResponse implements AbstractModel {
 
