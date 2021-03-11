@@ -76,6 +76,11 @@ public class ContactBuilder {
     return this;
   }
 
+  public ContactBuilder customProperty(String internalName, String value) {
+    properties.add(new PropertyRequest(internalName, value));
+    return this;
+  }
+
   public ContactRequest build() {
     ContactRequest contactRequest = new ContactRequest();
     contactRequest.setProperties(properties);
