@@ -1,41 +1,69 @@
 package com.impactupgrade.integration.hubspot.v3
 
-import com.impactupgrade.integration.hubspot.AbstractClient
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import javax.ws.rs.client.Entity
 import javax.ws.rs.core.MediaType
 
-class ContactV3Client(apiKey: String) : AbstractClient(apiKey) {
+class ContactV3Client(apiKey: String) : AbstractV3Client(
+  apiKey,
+  "crm/v3/objects/contacts",
+) {
 
   private val log: Logger = LogManager.getLogger(ContactV3Client::class.java)
 
-  private val contactsTarget = target.path("crm/v3/objects/contacts")
-
   fun getById(id: String): Contact? {
-    return contactsTarget
+    val response = target
       .path(id)
       .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
-      .get(Contact::class.java)
+      .get()
+    return when (response.status) {
+      200 -> response.readEntity(Contact::class.java)
+      else -> {
+        log.warn("HubSpot API error: {}", response.readEntity(String::class.java))
+        null
+      }
+    }
   }
 
   fun getByEmail(email: String): Contact? {
     val search = Search(listOf(FilterGroup(listOf(Filter("email", "EQ", email)))))
-    val results = contactsTarget
+    val response = target
       .path("search")
       .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
       .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
-      .readEntity(ContactResults::class.java)
+    return when (response.status) {
+      200 -> {
+        val results = response.readEntity(ContactResults::class.java)
+        return when (results.total) {
+          0 -> null
+          1 -> results.results[0]
+          else -> {
+            log.warn("{} resulted in {} contacts; returning the first", email, results.total)
+            results.results[0]
+          }
+        }
+      }
+      else -> {
+        log.warn("HubSpot API error: {}", response.readEntity(String::class.java))
+        null
+      }
+    }
+  }
 
-    if (results.total == 0) {
-      return null
-    } else if (results.total == 1) {
-      return results.results[0]
-    } else {
-      log.warn("{} resulted in {} contacts; returning the first", email, results.total)
-      return results.results[0]
+  fun insert(properties: ContactProperties): Contact? {
+    val response = target
+      .queryParam("hapikey", apiKey)
+      .request(MediaType.APPLICATION_JSON)
+      .post(Entity.entity(properties, MediaType.APPLICATION_JSON_TYPE))
+    return when (response.status) {
+      201 -> response.readEntity(Contact::class.java)
+      else -> {
+        log.warn("HubSpot API error: {}", response.readEntity(String::class.java))
+        null
+      }
     }
   }
 }

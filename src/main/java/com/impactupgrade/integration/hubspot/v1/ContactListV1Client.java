@@ -1,6 +1,5 @@
 package com.impactupgrade.integration.hubspot.v1;
 
-import com.impactupgrade.integration.hubspot.AbstractClient;
 import com.impactupgrade.integration.hubspot.v1.model.ContactArray;
 import com.impactupgrade.integration.hubspot.v1.model.ContactListArray;
 import com.impactupgrade.integration.hubspot.v1.model.VidsRequest;
@@ -12,7 +11,7 @@ import javax.ws.rs.core.Response;
 import java.util.Arrays;
 
 @Deprecated
-public class ContactListV1Client extends AbstractClient {
+public class ContactListV1Client extends AbstractV1Client {
 
   private final WebTarget listsTarget = target.path("contacts/v1/lists");
 

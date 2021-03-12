@@ -1,6 +1,5 @@
 package com.impactupgrade.integration.hubspot.v1;
 
-import com.impactupgrade.integration.hubspot.AbstractClient;
 import com.impactupgrade.integration.hubspot.v1.builder.ContactBuilder;
 import com.impactupgrade.integration.hubspot.v1.exception.DuplicateContactException;
 import com.impactupgrade.integration.hubspot.exception.HubSpotException;
@@ -16,7 +15,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Deprecated
-public class ContactV1Client extends AbstractClient {
+public class ContactV1Client extends AbstractV1Client {
 
   private final WebTarget contactsTarget = target.path("contacts/v1");
 
