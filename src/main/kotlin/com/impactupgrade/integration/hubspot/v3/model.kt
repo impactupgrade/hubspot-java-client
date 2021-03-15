@@ -12,8 +12,6 @@ data class Filter(val propertyName: String, val operator: String, val value: Str
 
 data class Association(val from: String, val to: String, val type: String)
 
-data class Company(val id: String, val properties: CompanyProperties) : AbstractModel
-
 // mutable -- used by clients for insert/update
 data class CompanyProperties(
   var name: String? = null,
@@ -25,7 +23,9 @@ data class CompanyProperties(
   @JsonUnwrapped val customProperties: Map<String, Any> = mutableMapOf(),
 ) : AbstractModel
 
-data class Contact(val id: String, val properties: ContactProperties) : AbstractModel
+data class Company(val id: String, val properties: CompanyProperties) : AbstractModel
+
+data class CompanyResults(val total: Int, val results: List<Company>)
 
 // mutable -- used by clients for insert/update
 data class ContactProperties(
@@ -42,6 +42,8 @@ data class ContactProperties(
   @JsonProperty("associatedcompanyid") var companyId: String? = null, // TODO: now have to use Associations API to *create* them, but hopefully this is still a read-only option
   @JsonUnwrapped val customProperties: Map<String, Any> = mutableMapOf(),
 ) : AbstractModel
+
+data class Contact(val id: String, val properties: ContactProperties) : AbstractModel
 
 data class ContactResults(val total: Int, val results: List<Contact>)
 
@@ -60,3 +62,5 @@ data class DealProperties(
 ) : AbstractModel
 
 data class Deal(val id: String, val properties: DealProperties) : AbstractModel
+
+data class DealResults(val total: Int, val results: List<Deal>)

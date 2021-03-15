@@ -12,7 +12,7 @@ class ContactV3Client(apiKey: String) : AbstractV3Client(
 
   private val log: Logger = LogManager.getLogger(ContactV3Client::class.java)
 
-  fun getById(id: String): Contact? {
+  fun read(id: String): Contact? {
     val response = target
       .path(id)
       .queryParam("hapikey", apiKey)
@@ -27,8 +27,9 @@ class ContactV3Client(apiKey: String) : AbstractV3Client(
     }
   }
 
-  fun getByEmail(email: String): Contact? {
-    val search = Search(listOf(FilterGroup(listOf(Filter("email", "EQ", email)))))
+  // ex: Filter("email", "EQ", email)
+  fun search(vararg filters: Filter): ContactResults? {
+    val search = Search(listOf(FilterGroup(filters.asList())))
     val response = target
       .path("search")
       .queryParam("hapikey", apiKey)
@@ -36,15 +37,7 @@ class ContactV3Client(apiKey: String) : AbstractV3Client(
       .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
     return when (response.status) {
       200 -> {
-        val results = response.readEntity(ContactResults::class.java)
-        return when (results.total) {
-          0 -> null
-          1 -> results.results[0]
-          else -> {
-            log.warn("{} resulted in {} contacts; returning the first", email, results.total)
-            results.results[0]
-          }
-        }
+        return response.readEntity(ContactResults::class.java)
       }
       else -> {
         log.warn("HubSpot API error: {}", response.readEntity(String::class.java))
