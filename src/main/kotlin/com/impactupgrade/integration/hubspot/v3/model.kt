@@ -1,6 +1,8 @@
 package com.impactupgrade.integration.hubspot.v3
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonUnwrapped
 import com.impactupgrade.integration.hubspot.v1.model.AbstractModel
 import java.util.Calendar
 
@@ -20,6 +22,7 @@ data class CompanyProperties(
   var state: String? = null,
   var zip: String? = null,
   var country: String? = null,
+  @JsonUnwrapped val customProperties: Map<String, Any> = mutableMapOf(),
 ) : AbstractModel
 
 data class Contact(val id: String, val properties: ContactProperties) : AbstractModel
@@ -37,6 +40,7 @@ data class ContactProperties(
   var zip: String? = null,
   var country: String? = null,
   @JsonProperty("associatedcompanyid") var companyId: String? = null, // TODO: now have to use Associations API to *create* them, but hopefully this is still a read-only option
+  @JsonUnwrapped val customProperties: Map<String, Any> = mutableMapOf(),
 ) : AbstractModel
 
 data class ContactResults(val total: Int, val results: List<Contact>)
@@ -51,6 +55,7 @@ data class DealProperties(
   var description: String? = null,
   var pipeline: String? = null,
   @JsonProperty("associatedcompanyid") var companyId: String? = null, // TODO: now have to use Associations API to *create* them, but hopefully this is still a read-only option
+  @JsonUnwrapped val customProperties: Map<String, Any> = mutableMapOf(),
 ) : AbstractModel
 
 data class Deal(val id: String, val properties: DealProperties) : AbstractModel
