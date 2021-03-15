@@ -54,6 +54,7 @@ data class DealProperties(
   var dealstage: String? = null,
   var description: String? = null,
   var pipeline: String? = null,
+  @JsonProperty("recurring_revenue_amount") var recurringRevenueAmount: Double? = null,
   @JsonProperty("associatedcompanyid") var companyId: String? = null, // TODO: now have to use Associations API to *create* them, but hopefully this is still a read-only option
   @JsonUnwrapped val customProperties: Map<String, Any> = mutableMapOf(),
 ) : AbstractModel
