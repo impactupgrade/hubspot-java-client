@@ -42,13 +42,13 @@ public class ContactV1Client extends AbstractV1Client {
   }
 
   @Deprecated
-  public Response getByEmailBatch(List<String> emails) {
+  public String getByEmailBatch(List<String> emails) {
     return contactsTarget
-            .path("contact/emails/batch/")
-            .queryParam("email", emails.toArray())
-            .queryParam("hapikey", apiKey)
-            .request(MediaType.APPLICATION_JSON)
-            .get();
+        .path("contact/emails/batch/")
+        .queryParam("email", emails.toArray())
+        .queryParam("hapikey", apiKey)
+        .request(MediaType.APPLICATION_JSON)
+        .get(String.class);
   }
 
   @Deprecated
