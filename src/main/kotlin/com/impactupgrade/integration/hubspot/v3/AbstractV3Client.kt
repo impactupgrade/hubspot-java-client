@@ -1,7 +1,7 @@
 package com.impactupgrade.integration.hubspot.v3
 
-import jakarta.ws.rs.client.ClientBuilder
 import org.glassfish.jersey.client.HttpUrlConnectorProvider
+import javax.ws.rs.client.ClientBuilder
 
 abstract class AbstractV3Client(
   protected val apiKey: String,

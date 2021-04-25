@@ -7,11 +7,11 @@ import com.impactupgrade.integration.hubspot.v1.model.Contact;
 import com.impactupgrade.integration.hubspot.v1.model.ContactArray;
 import com.impactupgrade.integration.hubspot.v1.model.ContactRequest;
 import com.impactupgrade.integration.hubspot.v1.model.internal.ErrorResponse;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Deprecated

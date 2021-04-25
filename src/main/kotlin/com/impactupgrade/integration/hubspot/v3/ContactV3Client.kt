@@ -1,7 +1,7 @@
 package com.impactupgrade.integration.hubspot.v3
 
-import jakarta.ws.rs.client.Entity
-import jakarta.ws.rs.core.MediaType
+import javax.ws.rs.client.Entity
+import javax.ws.rs.core.MediaType
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import kotlin.reflect.full.declaredMemberProperties

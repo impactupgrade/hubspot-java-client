@@ -30,7 +30,7 @@
   </developers>
 
   <properties>
-    <version.jersey>3.0.1</version.jersey>
+    <version.jersey>2.34</version.jersey>
     <version.kotlin>1.4.31</version.kotlin>
     <version.log4j>2.13.0</version.log4j>
 
@@ -52,7 +52,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-kotlin</artifactId>
-      <!-- Keep in sync with the version of Jackon provided by Jersey! -->
+      <!-- Keep in sync with the version of Jackson provided by Jersey! -->
       <version>2.11.3</version>
     </dependency>
 
