@@ -6,7 +6,7 @@
 
   <groupId>com.impactupgrade.integration</groupId>
   <artifactId>hubspot-java-client</artifactId>
-  <version>2.0.0.Final</version>
+  <version>2.0.1-SNAPSHOT</version>
 
   <name>hubspot-java-client</name>
   <description>TODO</description>
