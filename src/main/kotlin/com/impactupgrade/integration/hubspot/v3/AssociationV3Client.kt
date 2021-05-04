@@ -19,6 +19,7 @@ class AssociationV3Client(apiKey: String) : AbstractV3Client(
   fun insert(fromType: String, fromId: String, toType: String, toId: String) {
     val association = AssociationInput(HasId(fromId), HasId(toId), fromType + "_to_" + toType)
     val associationBatch = AssociationBatch(listOf(association))
+    log.info("inserting association: {}", associationBatch)
     val response = target
       .path(fromType).path(toType).path("batch").path("create")
       .queryParam("hapikey", apiKey)
@@ -26,6 +27,8 @@ class AssociationV3Client(apiKey: String) : AbstractV3Client(
       .post(Entity.entity(associationBatch, MediaType.APPLICATION_JSON_TYPE))
     if (response.status >= 300) {
       log.warn("HubSpot API error {}: {}", response.status, response.readEntity(String::class.java))
+    } else {
+      log.info("HubSpot API response {}: {}", response.status, response.readEntity(String::class.java))
     }
   }
 }

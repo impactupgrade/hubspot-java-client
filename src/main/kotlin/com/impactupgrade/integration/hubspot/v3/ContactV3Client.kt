@@ -17,6 +17,7 @@ class ContactV3Client(apiKey: String) : AbstractV3Client(
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(ContactProperties::class.declaredMemberProperties.map { p -> p.name })
+    log.info("fetching contact {}: {}", id, properties)
 
     val response = target
       .path(id)
@@ -25,9 +26,13 @@ class ContactV3Client(apiKey: String) : AbstractV3Client(
       .request(MediaType.APPLICATION_JSON)
       .get()
     return when (response.status) {
-      200 -> response.readEntity(Contact::class.java)
+      200 -> {
+        val responseEntity = response.readEntity(Contact::class.java)
+        log.info("HubSpot API response {}: {}", response.status, responseEntity)
+        responseEntity
+      }
       else -> {
-        log.warn("HubSpot API error: {}", response.readEntity(String::class.java))
+        log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
         null
       }
     }
@@ -38,12 +43,13 @@ class ContactV3Client(apiKey: String) : AbstractV3Client(
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(ContactProperties::class.declaredMemberProperties.map { p -> p.name })
-
-    val search = com.impactupgrade.integration.hubspot.v3.Search(listOf(
-      com.impactupgrade.integration.hubspot.v3.FilterGroup(
+    val search = Search(listOf(
+      FilterGroup(
         filters.asList()
       )
     ), properties)
+    log.info("searching contacts: {}", search)
+
     val response = target
       .path("search")
       .queryParam("hapikey", apiKey)
@@ -51,41 +57,53 @@ class ContactV3Client(apiKey: String) : AbstractV3Client(
       .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
     return when (response.status) {
       200 -> {
-        return response.readEntity(ContactResults::class.java)
+        val responseEntity = response.readEntity(ContactResults::class.java)
+        log.info("HubSpot API response {}: {}", response.status, responseEntity)
+        responseEntity
       }
       else -> {
-        log.warn("HubSpot API error: {}", response.readEntity(String::class.java))
+        log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
         null
       }
     }
   }
 
   fun insert(properties: ContactProperties): Contact? {
-    val contact = com.impactupgrade.integration.hubspot.v3.Contact(null, properties)
+    val contact = Contact(null, properties)
+    log.info("inserting contact: {}", contact)
     val response = target
       .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
       .post(Entity.entity(contact, MediaType.APPLICATION_JSON_TYPE))
     return when (response.status) {
-      201 -> response.readEntity(Contact::class.java)
+      201 -> {
+        val responseEntity = response.readEntity(Contact::class.java)
+        log.info("HubSpot API response {}: {}", response.status, responseEntity)
+        responseEntity
+      }
       else -> {
-        log.warn("HubSpot API error: {}", response.readEntity(String::class.java))
+        log.warn("HubSpot API error {}: {}", response.status, response.readEntity(String::class.java))
         null
       }
     }
   }
 
   fun update(id: String, properties: ContactProperties): Contact? {
-    val contact = com.impactupgrade.integration.hubspot.v3.Contact(null, properties)
+    val contact = Contact(null, properties)
+    log.info("updating contact: {}", contact)
     val response = target
       .path(id)
       .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
       .method("PATCH", Entity.entity(contact, MediaType.APPLICATION_JSON_TYPE))
     return when (response.status) {
-      200 -> response.readEntity(Contact::class.java)
+      200 -> {
+        val responseEntity = response.readEntity(Contact::class.java)
+        log.info("HubSpot API response {}: {}", response.status, responseEntity)
+        responseEntity
+      }
       else -> {
-        log.warn("HubSpot API error: {}", response.readEntity(String::class.java))
+        log.warn("HubSpot API error {}: {}", response.status, response.readEntity(String::class.java))
         null
       }
     }

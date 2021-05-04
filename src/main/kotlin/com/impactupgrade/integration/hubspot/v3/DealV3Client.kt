@@ -17,6 +17,7 @@ class DealV3Client(apiKey: String) : AbstractV3Client(
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(DealProperties::class.declaredMemberProperties.map { p -> p.name })
+    log.info("fetching deal {}: {}", id, properties)
 
     val response = target
       .path(id)
@@ -25,9 +26,13 @@ class DealV3Client(apiKey: String) : AbstractV3Client(
       .request(MediaType.APPLICATION_JSON)
       .get()
     return when (response.status) {
-      200 -> response.readEntity(Deal::class.java)
+      200 -> {
+        val responseEntity = response.readEntity(Deal::class.java)
+        log.info("HubSpot API response {}: {}", response.status, responseEntity)
+        responseEntity
+      }
       else -> {
-        log.warn("HubSpot API error: {}", response.readEntity(String::class.java))
+        log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
         null
       }
     }
@@ -37,8 +42,9 @@ class DealV3Client(apiKey: String) : AbstractV3Client(
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(DealProperties::class.declaredMemberProperties.map { p -> p.name })
-
     val search = Search(listOf(FilterGroup(filters.asList())), properties)
+    log.info("searching deals: {}", search)
+
     val response = target
       .path("search")
       .queryParam("hapikey", apiKey)
@@ -46,10 +52,12 @@ class DealV3Client(apiKey: String) : AbstractV3Client(
       .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
     return when (response.status) {
       200 -> {
-        return response.readEntity(DealResults::class.java)
+        val responseEntity = response.readEntity(DealResults::class.java)
+        log.info("HubSpot API response {}: {}", response.status, responseEntity)
+        responseEntity
       }
       else -> {
-        log.warn("HubSpot API error: {}", response.readEntity(String::class.java))
+        log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
         null
       }
     }
@@ -57,14 +65,19 @@ class DealV3Client(apiKey: String) : AbstractV3Client(
 
   fun insert(properties: DealProperties): Deal? {
     val deal = Deal(null, properties)
+    log.info("inserting deal: {}", deal)
     val response = target
       .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
       .post(Entity.entity(deal, MediaType.APPLICATION_JSON_TYPE))
     return when (response.status) {
-      201 -> response.readEntity(Deal::class.java)
+      201 -> {
+        val responseEntity = response.readEntity(Deal::class.java)
+        log.info("HubSpot API response {}: {}", response.status, responseEntity)
+        responseEntity
+      }
       else -> {
-        log.warn("HubSpot API error: {}", response.readEntity(String::class.java))
+        log.warn("HubSpot API error {}: {}", response.status, response.readEntity(String::class.java))
         null
       }
     }
@@ -72,15 +85,20 @@ class DealV3Client(apiKey: String) : AbstractV3Client(
 
   fun update(id: String, properties: DealProperties): Deal? {
     val deal = Deal(null, properties)
+    log.info("updating deal: {}", deal)
     val response = target
       .path(id)
       .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
       .method("PATCH", Entity.entity(deal, MediaType.APPLICATION_JSON_TYPE))
     return when (response.status) {
-      200 -> response.readEntity(Deal::class.java)
+      200 -> {
+        val responseEntity = response.readEntity(Deal::class.java)
+        log.info("HubSpot API response {}: {}", response.status, responseEntity)
+        responseEntity
+      }
       else -> {
-        log.warn("HubSpot API error: {}", response.readEntity(String::class.java))
+        log.warn("HubSpot API error {}: {}", response.status, response.readEntity(String::class.java))
         null
       }
     }
