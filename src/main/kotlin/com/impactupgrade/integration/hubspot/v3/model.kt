@@ -44,7 +44,7 @@ data class ContactProperties(
   var lastname: String? = null,
   var email: String? = null,
   var phone: String? = null,
-  @JsonProperty("mobile_phone") var mobilePhone: String? = null,
+  var mobilephone: String? = null,
   var address: String? = null,
   var city: String? = null,
   var state: String? = null,
