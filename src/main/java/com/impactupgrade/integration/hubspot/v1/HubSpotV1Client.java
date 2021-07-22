@@ -19,4 +19,9 @@ public class HubSpotV1Client {
   public ContactListV1Client contactList() {
     return new ContactListV1Client(apiKey);
   }
+
+  @Deprecated
+  public EngagementV1Client engagement() {
+    return new EngagementV1Client(apiKey);
+  }
 }
