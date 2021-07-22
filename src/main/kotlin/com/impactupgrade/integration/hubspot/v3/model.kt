@@ -26,6 +26,7 @@ data class CompanyProperties(
   var state: String? = null,
   var zip: String? = null,
   var country: String? = null,
+  var description: String? = null,
   @get:JsonAnyGetter var customProperties: Map<String, Any> = mutableMapOf(),
 ) {
 }
