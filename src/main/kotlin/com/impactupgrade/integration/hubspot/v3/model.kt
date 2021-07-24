@@ -27,6 +27,7 @@ data class CompanyProperties(
   var zip: String? = null,
   var country: String? = null,
   var description: String? = null,
+  @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
   @get:JsonAnyGetter var customProperties: Map<String, Any> = mutableMapOf(),
 ) {
 }
@@ -52,6 +53,7 @@ data class ContactProperties(
   var zip: String? = null,
   var country: String? = null,
   var associatedcompanyid: String? = null,
+  @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
   @get:JsonAnyGetter var customProperties: Map<String, Any> = mutableMapOf(),
 ) {
 }
@@ -78,6 +80,7 @@ data class DealProperties(
   @JsonProperty("recurring_revenue_inactive_date") var recurringRevenueInactiveDate: Calendar? = null,
   @JsonProperty("recurring_revenue_inactive_reason") var recurringRevenueInactiveReason: String? = null,
   var associatedcompanyid: String? = null,
+  @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
   @get:JsonAnyGetter var customProperties: Map<String, Any> = mutableMapOf(),
 ) {
 }
