@@ -8,15 +8,8 @@ public class ContactProperties implements AbstractModel {
   private HasValue<String> lastname;
   private HasValue<String> email;
   private HasValue<String> phone;
-  // TODO: are the *_phone fields standard?
-  @JsonProperty("home_phone")
-  private HasValue<String> homePhone;
-  @JsonProperty("mobile_phone") 
+  @JsonProperty("mobilephone")
   private HasValue<String> mobilePhone;
-  @JsonProperty("work_phone") 
-  private HasValue<String> workPhone;
-  @JsonProperty("preferred_phone") 
-  private HasValue<String> preferredPhone;
   private HasValue<String> address;
   private HasValue<String> city;
   private HasValue<String> state;
@@ -57,36 +50,12 @@ public class ContactProperties implements AbstractModel {
     this.phone = phone;
   }
 
-  public HasValue<String> getHomePhone() {
-    return homePhone;
-  }
-
-  public void setHomePhone(HasValue<String> homePhone) {
-    this.homePhone = homePhone;
-  }
-
-  public HasValue<String> getWorkPhone() {
-    return workPhone;
-  }
-
-  public void setWorkPhone(HasValue<String> workPhone) {
-    this.workPhone = workPhone;
-  }
-
   public HasValue<String> getMobilePhone() {
     return mobilePhone;
   }
 
   public void setMobilePhone(HasValue<String> mobilePhone) {
     this.mobilePhone = mobilePhone;
-  }
-
-  public HasValue<String> getPreferredPhone() {
-    return preferredPhone;
-  }
-
-  public void setPreferredPhone(HasValue<String> preferredPhone) {
-    this.preferredPhone = preferredPhone;
   }
 
   public HasValue<String> getAddress() {
@@ -140,10 +109,7 @@ public class ContactProperties implements AbstractModel {
         ", lastname=" + lastname +
         ", email=" + email +
         ", phone=" + phone +
-        ", home_phone=" + homePhone +
-        ", work_phone=" + workPhone +
         ", mobile_phone=" + mobilePhone +
-        ", preferred_phone=" + preferredPhone +
         ", address=" + address +
         ", city=" + city +
         ", state=" + state +
