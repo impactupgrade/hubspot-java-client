@@ -39,13 +39,13 @@ class ContactV3Client(apiKey: String) : AbstractV3Client(
   }
 
   // ex: Filter("email", "EQ", email)
-  fun search(filters: Array<Filter>, customProperties: List<String> = listOf()): ContactResults? {
+  fun search(filters: List<Filter>, customProperties: List<String> = listOf()): ContactResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(ContactProperties::class.declaredMemberProperties.map { p -> p.name })
     val search = Search(listOf(
       FilterGroup(
-        filters.asList()
+        filters
       )
     ), properties)
     log.info("searching contacts: {}", search)
@@ -63,10 +63,17 @@ class ContactV3Client(apiKey: String) : AbstractV3Client(
       }
       else -> {
         log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
-        null
+        ContactResults(0, listOf())
       }
     }
   }
+
+  // provide commonly-used searches
+  fun searchByEmail(email: String, customProperties: List<String> = listOf()) =
+    search(listOf(Filter("email", "EQ", email)))
+  fun searchByPhone(phone: String, customProperties: List<String> = listOf()) =
+    // TODO: Also need to include mobilephone?
+    search(listOf(Filter("phone", "EQ", normalizePhoneNumber(phone))))
 
   fun insert(properties: ContactProperties): Contact? {
     val contact = Contact(null, properties)
@@ -107,5 +114,15 @@ class ContactV3Client(apiKey: String) : AbstractV3Client(
         null
       }
     }
+  }
+
+  fun delete(id: String) {
+    log.info("deleting contact: {}", id)
+    val response = target
+      .path(id)
+      .queryParam("hapikey", apiKey)
+      .request(MediaType.APPLICATION_JSON)
+      .delete()
+    log.info("HubSpot API response: {}", response.status)
   }
 }

@@ -1,10 +1,9 @@
 package com.impactupgrade.integration.hubspot.v3
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import javax.ws.rs.client.Entity
-import javax.ws.rs.core.MediaType
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import javax.ws.rs.client.Entity
+import javax.ws.rs.core.MediaType
 import kotlin.reflect.full.declaredMemberProperties
 
 class CompanyV3Client(apiKey: String) : AbstractV3Client(
@@ -39,13 +38,13 @@ class CompanyV3Client(apiKey: String) : AbstractV3Client(
     }
   }
 
-  fun search(filters: Array<Filter>, customProperties: List<String> = listOf()): CompanyResults? {
+  fun search(filters: List<Filter>, customProperties: List<String> = listOf()): CompanyResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(CompanyProperties::class.declaredMemberProperties.map { p -> p.name })
     val search = Search(listOf(
       FilterGroup(
-        filters.asList()
+        filters
       ),
     ), properties)
     log.info("searching companies: {}", search)
@@ -63,10 +62,14 @@ class CompanyV3Client(apiKey: String) : AbstractV3Client(
       }
       else -> {
         log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
-        null
+        CompanyResults(0, listOf())
       }
     }
   }
+
+  // provide commonly-used searches
+  fun searchByName(name: String, customProperties: List<String> = listOf()) =
+    search(listOf(Filter("name", "CONTAINS_TOKEN", name)))
 
   fun insert(properties: CompanyProperties): Company? {
     val company = Company(null, properties)
@@ -107,5 +110,15 @@ class CompanyV3Client(apiKey: String) : AbstractV3Client(
         null
       }
     }
+  }
+
+  fun delete(id: String) {
+    log.info("deleting company: {}", id)
+    val response = target
+      .path(id)
+      .queryParam("hapikey", apiKey)
+      .request(MediaType.APPLICATION_JSON)
+      .delete()
+    log.info("HubSpot API response: {}", response.status)
   }
 }

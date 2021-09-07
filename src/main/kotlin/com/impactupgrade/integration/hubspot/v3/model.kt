@@ -14,8 +14,14 @@ data class FilterGroup(val filters: List<Filter>)
 data class Filter(val propertyName: String, val operator: String, val value: String)
 
 data class HasId(val id: String)
-data class AssociationInput(val from: HasId, val to: HasId, val type: String)
-data class AssociationBatch(val inputs: List<AssociationInput>)
+
+data class AssociationInsertInput(val from: HasId, val to: HasId, val type: String)
+data class AssociationInsertBatch(val inputs: List<AssociationInsertInput>)
+
+data class AssociationSearchBatch(val inputs: List<HasId>)
+data class AssociationSearchResult(val id: String, val type: String)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class AssociationResults(val from: HasId, val to: List<AssociationSearchResult>)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -29,8 +35,7 @@ data class CompanyProperties(
   var description: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
   @get:JsonAnyGetter var customProperties: Map<String, Any> = mutableMapOf(),
-) {
-}
+)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -55,8 +60,7 @@ data class ContactProperties(
   var associatedcompanyid: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
   @get:JsonAnyGetter var customProperties: Map<String, Any> = mutableMapOf(),
-) {
-}
+)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -82,8 +86,7 @@ data class DealProperties(
   var associatedcompanyid: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
   @get:JsonAnyGetter var customProperties: Map<String, Any> = mutableMapOf(),
-) {
-}
+)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)

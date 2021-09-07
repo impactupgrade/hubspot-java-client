@@ -38,11 +38,11 @@ class DealV3Client(apiKey: String) : AbstractV3Client(
     }
   }
 
-  fun search(filters: Array<Filter>, customProperties: List<String> = listOf()): DealResults? {
+  fun search(filters: List<Filter>, customProperties: List<String> = listOf()): DealResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(DealProperties::class.declaredMemberProperties.map { p -> p.name })
-    val search = Search(listOf(FilterGroup(filters.asList())), properties)
+    val search = Search(listOf(FilterGroup(filters)), properties)
     log.info("searching deals: {}", search)
 
     val response = target
@@ -58,7 +58,7 @@ class DealV3Client(apiKey: String) : AbstractV3Client(
       }
       else -> {
         log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
-        null
+        DealResults(0, listOf())
       }
     }
   }
@@ -102,5 +102,15 @@ class DealV3Client(apiKey: String) : AbstractV3Client(
         null
       }
     }
+  }
+
+  fun delete(id: String) {
+    log.info("deleting deal: {}", id)
+    val response = target
+      .path(id)
+      .queryParam("hapikey", apiKey)
+      .request(MediaType.APPLICATION_JSON)
+      .delete()
+    log.info("HubSpot API response: {}", response.status)
   }
 }
