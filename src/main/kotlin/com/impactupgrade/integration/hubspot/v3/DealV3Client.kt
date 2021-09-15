@@ -38,6 +38,32 @@ class DealV3Client(apiKey: String) : AbstractV3Client(
     }
   }
 
+  fun batchRead(ids: List<String>, customProperties: List<String> = listOf()): DealBatchResults {
+    val hasIds = ids.map { HasId(it) }
+    val properties = mutableListOf<String>()
+    properties.addAll(customProperties)
+    properties.addAll(DealProperties::class.declaredMemberProperties.map { p -> p.name })
+    val batchRead = BatchRead(hasIds, properties)
+    log.info("batch reading deals: {}", batchRead)
+
+    val response = target
+      .path("batch/read")
+      .queryParam("hapikey", apiKey)
+      .request(MediaType.APPLICATION_JSON)
+      .post(Entity.entity<Any>(batchRead, MediaType.APPLICATION_JSON))
+    return when (response.status) {
+      200 -> {
+        val responseEntity = response.readEntity(DealBatchResults::class.java)
+        log.info("HubSpot API response {}: {}", response.status, responseEntity)
+        responseEntity
+      }
+      else -> {
+        log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
+        DealBatchResults(listOf())
+      }
+    }
+  }
+
   fun search(filters: List<Filter>, customProperties: List<String> = listOf()): DealResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)

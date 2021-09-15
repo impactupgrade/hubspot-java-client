@@ -12,7 +12,7 @@ class AssociationV3Client(apiKey: String) : AbstractV3Client(
 
   private val log: Logger = LogManager.getLogger(AssociationV3Client::class.java)
 
-  fun search(fromType: String, fromId: String, toType: String): AssociationResults {
+  fun search(fromType: String, fromId: String, toType: String): AssociationSearchResults {
     val search = AssociationSearchBatch(listOf(HasId(fromId)))
     log.info("searching associations: {} {} {}", fromType, search, toType)
 
@@ -23,13 +23,13 @@ class AssociationV3Client(apiKey: String) : AbstractV3Client(
       .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
     return when (response.status) {
       200 -> {
-        val responseEntity = response.readEntity(AssociationResults::class.java)
+        val responseEntity = response.readEntity(AssociationSearchResults::class.java)
         log.info("HubSpot API response {}: {}", response.status, responseEntity)
         responseEntity
       }
       else -> {
         log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
-        AssociationResults(HasId(fromId), listOf())
+        AssociationSearchResults(listOf())
       }
     }
   }

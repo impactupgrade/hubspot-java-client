@@ -6,6 +6,12 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Calendar
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class BatchRead(
+  val inputs: List<HasId>,
+  val properties: List<String> = listOf()
+)
+
 data class Search(
   val filterGroups: List<FilterGroup>,
   val properties: List<String> = listOf()
@@ -13,15 +19,17 @@ data class Search(
 data class FilterGroup(val filters: List<Filter>)
 data class Filter(val propertyName: String, val operator: String, val value: String)
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class HasId(val id: String)
 
-data class AssociationInsertInput(val from: HasId, val to: HasId, val type: String)
 data class AssociationInsertBatch(val inputs: List<AssociationInsertInput>)
+data class AssociationInsertInput(val from: HasId, val to: HasId, val type: String)
 
 data class AssociationSearchBatch(val inputs: List<HasId>)
-data class AssociationSearchResult(val id: String, val type: String)
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class AssociationResults(val from: HasId, val to: List<AssociationSearchResult>)
+data class AssociationSearchResults(val results: List<AssociationSearchResult>)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class AssociationSearchResult(val from: HasId, val to: List<HasId>)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -91,6 +99,9 @@ data class DealProperties(
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class Deal(var id:String? = null, val properties: DealProperties)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class DealBatchResults(val results: List<Deal>)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class DealResults(val total: Int, val results: List<Deal>)
