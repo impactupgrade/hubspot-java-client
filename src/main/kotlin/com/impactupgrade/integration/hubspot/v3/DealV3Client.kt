@@ -13,7 +13,7 @@ class DealV3Client(apiKey: String) : AbstractV3Client(
 
   private val log: Logger = LogManager.getLogger(DealV3Client::class.java)
 
-  fun read(id: String, customProperties: List<String> = listOf()): Deal? {
+  fun read(id: String, customProperties: Collection<String> = listOf()): Deal? {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(DealProperties::class.declaredMemberProperties.map { p -> p.name })
@@ -38,7 +38,7 @@ class DealV3Client(apiKey: String) : AbstractV3Client(
     }
   }
 
-  fun batchRead(ids: List<String>, customProperties: List<String> = listOf()): DealBatchResults {
+  fun batchRead(ids: List<String>, customProperties: Collection<String> = listOf()): DealBatchResults {
     val hasIds = ids.map { HasId(it) }
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
@@ -64,7 +64,7 @@ class DealV3Client(apiKey: String) : AbstractV3Client(
     }
   }
 
-  fun search(filters: List<Filter>, customProperties: List<String> = listOf()): DealResults {
+  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf()): DealResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(DealProperties::class.declaredMemberProperties.map { p -> p.name })

@@ -1,6 +1,7 @@
 package com.impactupgrade.integration.hubspot.v3
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -9,12 +10,12 @@ import java.util.Calendar
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class BatchRead(
   val inputs: List<HasId>,
-  val properties: List<String> = listOf()
+  val properties: List<String>
 )
 
 data class Search(
   val filterGroups: List<FilterGroup>,
-  val properties: List<String> = listOf()
+  val properties: List<String>
 )
 data class FilterGroup(val filters: List<Filter>)
 data class Filter(val propertyName: String, val operator: String, val value: String)
@@ -31,7 +32,6 @@ data class AssociationSearchResults(val results: List<AssociationSearchResult>)
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class AssociationSearchResult(val from: HasId, val to: List<HasId>)
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class CompanyProperties(
   var name: String? = null,
@@ -42,7 +42,7 @@ data class CompanyProperties(
   var country: String? = null,
   var description: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
-  @get:JsonAnyGetter var customProperties: Map<String, Any> = mutableMapOf(),
+  @get:JsonAnyGetter @JsonAnySetter val otherProperties: Map<String, Any> = mutableMapOf(),
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -52,7 +52,6 @@ data class Company(var id:String? = null, val properties: CompanyProperties)
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class CompanyResults(val total: Int, val results: List<Company>)
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class ContactProperties(
   var firstname: String? = null,
@@ -67,7 +66,7 @@ data class ContactProperties(
   var country: String? = null,
   var associatedcompanyid: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
-  @get:JsonAnyGetter var customProperties: Map<String, Any> = mutableMapOf(),
+  @get:JsonAnyGetter @JsonAnySetter val otherProperties: Map<String, Any> = mutableMapOf(),
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -78,7 +77,6 @@ data class Contact(var id:String? = null, val properties: ContactProperties)
 data class ContactResults(val total: Int, val results: List<Contact>)
 
 // TODO: campaign
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class DealProperties(
   var amount: Double? = null,
@@ -93,7 +91,7 @@ data class DealProperties(
   @JsonProperty("recurring_revenue_inactive_reason") var recurringRevenueInactiveReason: String? = null,
   var associatedcompanyid: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
-  @get:JsonAnyGetter var customProperties: Map<String, Any> = mutableMapOf(),
+  @get:JsonAnyGetter @JsonAnySetter val otherProperties: Map<String, Any> = mutableMapOf(),
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

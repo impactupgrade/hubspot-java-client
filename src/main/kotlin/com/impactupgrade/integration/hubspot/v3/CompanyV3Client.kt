@@ -13,7 +13,7 @@ class CompanyV3Client(apiKey: String) : AbstractV3Client(
 
   private val log: Logger = LogManager.getLogger(CompanyV3Client::class.java)
 
-  fun read(id: String, customProperties: List<String> = listOf()): Company? {
+  fun read(id: String, customProperties: Collection<String> = listOf()): Company? {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(CompanyProperties::class.declaredMemberProperties.map { p -> p.name })
@@ -38,7 +38,7 @@ class CompanyV3Client(apiKey: String) : AbstractV3Client(
     }
   }
 
-  fun search(filters: List<Filter>, customProperties: List<String> = listOf()): CompanyResults {
+  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf()): CompanyResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(CompanyProperties::class.declaredMemberProperties.map { p -> p.name })
@@ -68,8 +68,8 @@ class CompanyV3Client(apiKey: String) : AbstractV3Client(
   }
 
   // provide commonly-used searches
-  fun searchByName(name: String, customProperties: List<String> = listOf()) =
-    search(listOf(Filter("name", "CONTAINS_TOKEN", name)))
+  fun searchByName(name: String, customProperties: Collection<String> = listOf()) =
+    search(listOf(Filter("name", "CONTAINS_TOKEN", name)), customProperties)
 
   fun insert(properties: CompanyProperties): Company? {
     val company = Company(null, properties)

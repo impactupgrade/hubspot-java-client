@@ -13,7 +13,7 @@ class ContactV3Client(apiKey: String) : AbstractV3Client(
 
   private val log: Logger = LogManager.getLogger(ContactV3Client::class.java)
 
-  fun read(id: String, customProperties: List<String> = listOf()): Contact? {
+  fun read(id: String, customProperties: Collection<String> = listOf()): Contact? {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(ContactProperties::class.declaredMemberProperties.map { p -> p.name })
@@ -39,7 +39,7 @@ class ContactV3Client(apiKey: String) : AbstractV3Client(
   }
 
   // ex: Filter("email", "EQ", email)
-  fun search(filters: List<Filter>, customProperties: List<String> = listOf()): ContactResults {
+  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf()): ContactResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(ContactProperties::class.declaredMemberProperties.map { p -> p.name })
@@ -69,11 +69,11 @@ class ContactV3Client(apiKey: String) : AbstractV3Client(
   }
 
   // provide commonly-used searches
-  fun searchByEmail(email: String, customProperties: List<String> = listOf()) =
-    search(listOf(Filter("email", "EQ", email)))
-  fun searchByPhone(phone: String, customProperties: List<String> = listOf()) =
+  fun searchByEmail(email: String, customProperties: Collection<String> = listOf()) =
+    search(listOf(Filter("email", "EQ", email)), customProperties)
+  fun searchByPhone(phone: String, customProperties: Collection<String> = listOf()) =
     // TODO: Also need to include mobilephone?
-    search(listOf(Filter("phone", "EQ", normalizePhoneNumber(phone))))
+    search(listOf(Filter("phone", "EQ", normalizePhoneNumber(phone))), customProperties)
 
   fun insert(properties: ContactProperties): Contact? {
     val contact = Contact(null, properties)
