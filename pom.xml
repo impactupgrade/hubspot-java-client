@@ -55,6 +55,12 @@
       <!-- Keep in sync with the version of Jackson provided by Jersey! -->
       <version>2.12.2</version>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-paranamer</artifactId>
+      <!-- Keep in sync with the version of Jackson provided by Jersey! -->
+      <version>2.12.2</version>
+    </dependency>
 
     <dependency>
       <groupId>org.glassfish.jersey.core</groupId>

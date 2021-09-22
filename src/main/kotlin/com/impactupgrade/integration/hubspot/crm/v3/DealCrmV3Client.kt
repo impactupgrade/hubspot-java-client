@@ -4,6 +4,10 @@ import javax.ws.rs.client.Entity
 import javax.ws.rs.core.MediaType
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 import kotlin.reflect.full.declaredMemberProperties
 
 class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
@@ -109,22 +113,27 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     }
   }
 
+  // TODO: Switched to using JDK's HttpClient -- having issues with Jersey, PATCH fixes, and Java 16 now preventing reflection on private modules.
+  //  Update this lib-wide, but isolating here for the moment.
   fun update(id: String, properties: DealProperties): Deal? {
     val deal = Deal(null, properties)
     log.info("updating deal: {}", deal)
-    val response = target
-      .path(id)
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .method("PATCH", Entity.entity(deal, MediaType.APPLICATION_JSON_TYPE))
-    return when (response.status) {
+
+    val request: HttpRequest = HttpRequest.newBuilder()
+        .uri(URI.create("https://api.hubapi.com/crm/v3/objects/deals/$id?hapikey=$apiKey"))
+        .header("Content-Type", "application/json")
+        .method("PATCH", HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(deal)))
+        .build()
+    val response: HttpResponse<String> = HttpClient.newBuilder().build().send(request, HttpResponse.BodyHandlers.ofString())
+
+    return when (response.statusCode()) {
       200 -> {
-        val responseEntity = response.readEntity(Deal::class.java)
-        log.info("HubSpot API response {}: {}", response.status, responseEntity)
+        val responseEntity = objectMapper.readValue(response.body(), Deal::class.java)
+        log.info("HubSpot API response {}: {}", response.statusCode(), responseEntity)
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.status, response.readEntity(String::class.java))
+        log.warn("HubSpot API error {}: {}", response.statusCode(), response.body())
         null
       }
     }
