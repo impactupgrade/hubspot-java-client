@@ -1,4 +1,4 @@
-package com.impactupgrade.integration.hubspot.v3
+package com.impactupgrade.integration.hubspot.crm.v3
 
 import javax.ws.rs.client.Entity
 import javax.ws.rs.core.MediaType
@@ -6,12 +6,12 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import kotlin.reflect.full.declaredMemberProperties
 
-class DealV3Client(apiKey: String) : AbstractV3Client(
+class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
   apiKey,
   "crm/v3/objects/deals",
 ) {
 
-  private val log: Logger = LogManager.getLogger(DealV3Client::class.java)
+  private val log: Logger = LogManager.getLogger(DealCrmV3Client::class.java)
 
   fun read(id: String, customProperties: Collection<String> = listOf()): Deal? {
     val properties = mutableListOf<String>()

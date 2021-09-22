@@ -1,9 +1,9 @@
-package com.impactupgrade.integration.hubspot.v3
+package com.impactupgrade.integration.hubspot.crm.v3
 
 import org.glassfish.jersey.client.HttpUrlConnectorProvider
 import javax.ws.rs.client.ClientBuilder
 
-abstract class AbstractV3Client(
+abstract class AbstractCrmV3Client(
   protected val apiKey: String,
   path: String,
 ) {

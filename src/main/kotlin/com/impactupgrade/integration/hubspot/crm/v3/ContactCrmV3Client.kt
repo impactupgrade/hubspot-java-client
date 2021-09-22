@@ -1,23 +1,23 @@
-package com.impactupgrade.integration.hubspot.v3
+package com.impactupgrade.integration.hubspot.crm.v3
 
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 import javax.ws.rs.client.Entity
 import javax.ws.rs.core.MediaType
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import kotlin.reflect.full.declaredMemberProperties
 
-class CompanyV3Client(apiKey: String) : AbstractV3Client(
+class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
   apiKey,
-  "crm/v3/objects/companies",
+  "crm/v3/objects/contacts",
 ) {
 
-  private val log: Logger = LogManager.getLogger(CompanyV3Client::class.java)
+  private val log: Logger = LogManager.getLogger(ContactCrmV3Client::class.java)
 
-  fun read(id: String, customProperties: Collection<String> = listOf()): Company? {
+  fun read(id: String, customProperties: Collection<String> = listOf()): Contact? {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
-    properties.addAll(CompanyProperties::class.declaredMemberProperties.map { p -> p.name })
-    log.info("fetching company {}: {}", id, properties)
+    properties.addAll(ContactProperties::class.declaredMemberProperties.map { p -> p.name })
+    log.info("fetching contact {}: {}", id, properties)
 
     val response = target
       .path(id)
@@ -27,7 +27,7 @@ class CompanyV3Client(apiKey: String) : AbstractV3Client(
       .get()
     return when (response.status) {
       200 -> {
-        val responseEntity = response.readEntity(Company::class.java)
+        val responseEntity = response.readEntity(Contact::class.java)
         log.info("HubSpot API response {}: {}", response.status, responseEntity)
         responseEntity
       }
@@ -38,16 +38,17 @@ class CompanyV3Client(apiKey: String) : AbstractV3Client(
     }
   }
 
-  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf()): CompanyResults {
+  // ex: Filter("email", "EQ", email)
+  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf()): ContactResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
-    properties.addAll(CompanyProperties::class.declaredMemberProperties.map { p -> p.name })
+    properties.addAll(ContactProperties::class.declaredMemberProperties.map { p -> p.name })
     val search = Search(listOf(
       FilterGroup(
         filters
-      ),
+      )
     ), properties)
-    log.info("searching companies: {}", search)
+    log.info("searching contacts: {}", search)
 
     val response = target
       .path("search")
@@ -56,31 +57,34 @@ class CompanyV3Client(apiKey: String) : AbstractV3Client(
       .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
     return when (response.status) {
       200 -> {
-        val responseEntity = response.readEntity(CompanyResults::class.java)
+        val responseEntity = response.readEntity(ContactResults::class.java)
         log.info("HubSpot API response {}: {}", response.status, responseEntity)
         responseEntity
       }
       else -> {
         log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
-        CompanyResults(0, listOf())
+        ContactResults(0, listOf())
       }
     }
   }
 
   // provide commonly-used searches
-  fun searchByName(name: String, customProperties: Collection<String> = listOf()) =
-    search(listOf(Filter("name", "CONTAINS_TOKEN", name)), customProperties)
+  fun searchByEmail(email: String, customProperties: Collection<String> = listOf()) =
+    search(listOf(Filter("email", "EQ", email)), customProperties)
+  fun searchByPhone(phone: String, customProperties: Collection<String> = listOf()) =
+    // TODO: Also need to include mobilephone?
+    search(listOf(Filter("phone", "EQ", normalizePhoneNumber(phone))), customProperties)
 
-  fun insert(properties: CompanyProperties): Company? {
-    val company = Company(null, properties)
-    log.info("inserting company: {}", company)
+  fun insert(properties: ContactProperties): Contact? {
+    val contact = Contact(null, properties)
+    log.info("inserting contact: {}", contact)
     val response = target
       .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
-      .post(Entity.entity(company, MediaType.APPLICATION_JSON_TYPE))
+      .post(Entity.entity(contact, MediaType.APPLICATION_JSON_TYPE))
     return when (response.status) {
       201 -> {
-        val responseEntity = response.readEntity(Company::class.java)
+        val responseEntity = response.readEntity(Contact::class.java)
         log.info("HubSpot API response {}: {}", response.status, responseEntity)
         responseEntity
       }
@@ -91,17 +95,17 @@ class CompanyV3Client(apiKey: String) : AbstractV3Client(
     }
   }
 
-  fun update(id: String, properties: CompanyProperties): Company? {
-    val company = Company(null, properties)
-    log.info("updating company: {}", company)
+  fun update(id: String, properties: ContactProperties): Contact? {
+    val contact = Contact(null, properties)
+    log.info("updating contact: {}", contact)
     val response = target
       .path(id)
       .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
-      .method("PATCH", Entity.entity(company, MediaType.APPLICATION_JSON_TYPE))
+      .method("PATCH", Entity.entity(contact, MediaType.APPLICATION_JSON_TYPE))
     return when (response.status) {
       200 -> {
-        val responseEntity = response.readEntity(Company::class.java)
+        val responseEntity = response.readEntity(Contact::class.java)
         log.info("HubSpot API response {}: {}", response.status, responseEntity)
         responseEntity
       }
@@ -113,7 +117,7 @@ class CompanyV3Client(apiKey: String) : AbstractV3Client(
   }
 
   fun delete(id: String) {
-    log.info("deleting company: {}", id)
+    log.info("deleting contact: {}", id)
     val response = target
       .path(id)
       .queryParam("hapikey", apiKey)

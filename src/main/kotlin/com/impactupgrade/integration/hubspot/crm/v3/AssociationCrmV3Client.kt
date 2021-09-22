@@ -1,16 +1,16 @@
-package com.impactupgrade.integration.hubspot.v3
+package com.impactupgrade.integration.hubspot.crm.v3
 
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import javax.ws.rs.client.Entity
 import javax.ws.rs.core.MediaType
 
-class AssociationV3Client(apiKey: String) : AbstractV3Client(
+class AssociationCrmV3Client(apiKey: String) : AbstractCrmV3Client(
   apiKey,
   "crm/v3/associations",
 ) {
 
-  private val log: Logger = LogManager.getLogger(AssociationV3Client::class.java)
+  private val log: Logger = LogManager.getLogger(AssociationCrmV3Client::class.java)
 
   fun search(fromType: String, fromId: String, toType: String): AssociationSearchResults {
     val search = AssociationSearchBatch(listOf(HasId(fromId)))

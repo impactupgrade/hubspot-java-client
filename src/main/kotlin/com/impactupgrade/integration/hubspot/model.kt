@@ -1,4 +1,4 @@
-package com.impactupgrade.integration.hubspot.v3
+package com.impactupgrade.integration.hubspot.crm.v3
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -9,13 +9,13 @@ import java.util.Calendar
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class BatchRead(
-  val inputs: List<HasId>,
-  val properties: List<String>
+    val inputs: List<HasId>,
+    val properties: List<String>
 )
 
 data class Search(
-  val filterGroups: List<FilterGroup>,
-  val properties: List<String>
+    val filterGroups: List<FilterGroup>,
+    val properties: List<String>
 )
 data class FilterGroup(val filters: List<Filter>)
 data class Filter(val propertyName: String, val operator: String, val value: String)
@@ -103,3 +103,13 @@ data class DealBatchResults(val results: List<Deal>)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class DealResults(val total: Int, val results: List<Deal>)
+
+data class FormField(val name: String, val value: String)
+data class FormContext(
+  var hutk: String? = null,
+  var pageId: String? = null,
+  var pageUri: String? = null,
+  var pageName: String? = null
+)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class Form(val fields: List<FormField>, var context: FormContext? = null)
