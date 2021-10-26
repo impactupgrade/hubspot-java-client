@@ -1,6 +1,8 @@
 package com.impactupgrade.integration.hubspot.v1.model;
 
-public class EngagementNoteMetadata implements AbstractModel  {
+public class EngagementNoteMetadata extends EngagementMetadata  {
+
+  // "body": "note body"
 
   private String body;
 
