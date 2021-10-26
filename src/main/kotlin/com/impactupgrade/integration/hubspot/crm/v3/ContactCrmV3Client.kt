@@ -19,7 +19,10 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
 
   private val log: Logger = LogManager.getLogger(ContactCrmV3Client::class.java)
 
-  fun read(id: String, customProperties: Collection<String> = listOf()): Contact? {
+  // for Java callers
+  fun read(id: String, customProperties: Collection<String> = listOf()) = read(id, customProperties, 0)
+
+  fun read(id: String, customProperties: Collection<String> = listOf(), attemptCount: Int = 0): Contact? {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(ContactProperties::class.declaredMemberProperties.map { p -> p.name })
@@ -38,14 +41,17 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
-        null
+        val retryFunction = { newAttemptCount: Int -> read(id, customProperties, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, null)
       }
     }
   }
 
+  // for Java callers
+  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf()) = search(filters, customProperties, 0)
+
   // ex: Filter("email", "EQ", email)
-  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf()): ContactResults {
+  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf(), attemptCount: Int = 0): ContactResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(ContactProperties::class.declaredMemberProperties.map { p -> p.name })
@@ -68,20 +74,23 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
-        ContactResults(0, listOf())
+        val retryFunction = { newAttemptCount: Int -> search(filters, customProperties, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, ContactResults(0, listOf()))
       }
     }
   }
 
   // provide commonly-used searches
   fun searchByEmail(email: String, customProperties: Collection<String> = listOf()) =
-    search(listOf(Filter("email", "EQ", email)), customProperties)
+    search(listOf(Filter("email", "EQ", email)), customProperties, 0)
   fun searchByPhone(phone: String, customProperties: Collection<String> = listOf()) =
     // TODO: Also need to include mobilephone?
-    search(listOf(Filter("phone", "EQ", normalizePhoneNumber(phone))), customProperties)
+    search(listOf(Filter("phone", "EQ", normalizePhoneNumber(phone))), customProperties, 0)
 
-  fun insert(properties: ContactProperties): Contact? {
+  // for Java callers
+  fun insert(properties: ContactProperties) = insert(properties, 0)
+
+  fun insert(properties: ContactProperties, attemptCount: Int = 0): Contact? {
     val contact = Contact(null, properties)
     log.info("inserting contact: {}", contact)
     val response = target
@@ -95,15 +104,18 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.status, response.readEntity(String::class.java))
-        null
+        val retryFunction = { newAttemptCount: Int -> insert(properties, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, null)
       }
     }
   }
 
+  // for Java callers
+  fun update(id: String, properties: ContactProperties) = update(id, properties, 0)
+
   // TODO: Switched to using JDK's HttpClient -- having issues with Jersey, PATCH fixes, and Java 16 now preventing reflection on private modules.
   //  Update this lib-wide, but isolating here for the moment.
-  fun update(id: String, properties: ContactProperties): Contact? {
+  fun update(id: String, properties: ContactProperties, attemptCount: Int = 0): Contact? {
     val contact = Contact(null, properties)
     log.info("updating contact: {}", contact)
 
@@ -121,8 +133,8 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.statusCode(), response.body())
-        null
+        val retryFunction = { newAttemptCount: Int -> update(id, properties, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, null)
       }
     }
   }

@@ -12,7 +12,10 @@ class AssociationCrmV3Client(apiKey: String) : AbstractCrmV3Client(
 
   private val log: Logger = LogManager.getLogger(AssociationCrmV3Client::class.java)
 
-  fun search(fromType: String, fromId: String, toType: String): AssociationSearchResults {
+  // for Java callers
+  fun search(fromType: String, fromId: String, toType: String) = search(fromType, fromId, toType, 0)
+
+  fun search(fromType: String, fromId: String, toType: String, attemptCount: Int = 0): AssociationSearchResults {
     val search = AssociationSearchBatch(listOf(HasId(fromId)))
     log.info("searching associations: {} {} {}", fromType, search, toType)
 
@@ -28,17 +31,20 @@ class AssociationCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
-        AssociationSearchResults(listOf())
+        val retryFunction = { newAttemptCount: Int -> search(fromType, fromId, toType, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, AssociationSearchResults(listOf()))
       }
     }
   }
+
+  // for Java callers
+  fun insert(fromType: String, fromId: String, toType: String, toId: String) = insert(fromType, fromId, toType, toId, 0)
 
   /**
    * This one's a little odd. The API requires the from and to object types to be defined on the path,
    * but also requires the type to be given within each batch input. For now, assume one at a time, just to be safe.
    */
-  fun insert(fromType: String, fromId: String, toType: String, toId: String) {
+  fun insert(fromType: String, fromId: String, toType: String, toId: String, attemptCount: Int = 0) {
     val association = AssociationInsertInput(HasId(fromId), HasId(toId), fromType + "_to_" + toType)
     val associationBatch = AssociationInsertBatch(listOf(association))
     log.info("inserting association: {}", associationBatch)
@@ -48,7 +54,8 @@ class AssociationCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       .request(MediaType.APPLICATION_JSON)
       .post(Entity.entity(associationBatch, MediaType.APPLICATION_JSON_TYPE))
     if (response.status >= 300) {
-      log.warn("HubSpot API error {}: {}", response.status, response.readEntity(String::class.java))
+      val retryFunction = { newAttemptCount: Int -> insert(fromType, fromId, toType, toId, newAttemptCount) }
+      handleError(response, attemptCount, retryFunction, Unit)
     } else {
       log.info("HubSpot API response {}: {}", response.status, response.readEntity(String::class.java))
     }

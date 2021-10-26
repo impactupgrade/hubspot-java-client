@@ -20,7 +20,10 @@ class CompanyCrmV3Client(apiKey: String) : AbstractCrmV3Client(
 
   private val log: Logger = LogManager.getLogger(CompanyCrmV3Client::class.java)
 
-  fun read(id: String, customProperties: Collection<String> = listOf()): Company? {
+  // for Java callers
+  fun read(id: String, customProperties: Collection<String> = listOf()) = read(id, customProperties, 0)
+
+  fun read(id: String, customProperties: Collection<String> = listOf(), attemptCount: Int = 0): Company? {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(CompanyProperties::class.declaredMemberProperties.map { p -> p.name })
@@ -39,13 +42,16 @@ class CompanyCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
-        null
+        val retryFunction = { newAttemptCount: Int -> read(id, customProperties, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, null)
       }
     }
   }
 
-  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf()): CompanyResults {
+  // for Java callers
+  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf()) = search(filters, customProperties, 0)
+
+  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf(), attemptCount: Int = 0): CompanyResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(CompanyProperties::class.declaredMemberProperties.map { p -> p.name })
@@ -68,17 +74,20 @@ class CompanyCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
-        CompanyResults(0, listOf())
+        val retryFunction = { newAttemptCount: Int -> search(filters, customProperties, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, CompanyResults(0, listOf()))
       }
     }
   }
 
   // provide commonly-used searches
   fun searchByName(name: String, customProperties: Collection<String> = listOf()) =
-    search(listOf(Filter("name", "CONTAINS_TOKEN", name)), customProperties)
+    search(listOf(Filter("name", "CONTAINS_TOKEN", name)), customProperties, 0)
 
-  fun insert(properties: CompanyProperties): Company? {
+  // for Java callers
+  fun insert(properties: CompanyProperties) = insert(properties, 0)
+
+  fun insert(properties: CompanyProperties, attemptCount: Int = 0): Company? {
     val company = Company(null, properties)
     log.info("inserting company: {}", company)
     val response = target
@@ -92,15 +101,18 @@ class CompanyCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.status, response.readEntity(String::class.java))
-        null
+        val retryFunction = { newAttemptCount: Int -> insert(properties, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, null)
       }
     }
   }
 
+  // for Java callers
+  fun update(id: String, properties: CompanyProperties) = update(id, properties, 0)
+
   // TODO: Switched to using JDK's HttpClient -- having issues with Jersey, PATCH fixes, and Java 16 now preventing reflection on private modules.
   //  Update this lib-wide, but isolating here for the moment.
-  fun update(id: String, properties: CompanyProperties): Company? {
+  fun update(id: String, properties: CompanyProperties, attemptCount: Int = 0): Company? {
     val company = Company(null, properties)
     log.info("updating company: {}", company)
 
@@ -118,8 +130,8 @@ class CompanyCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.statusCode(), response.body())
-        null
+        val retryFunction = { newAttemptCount: Int -> update(id, properties, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, null)
       }
     }
   }

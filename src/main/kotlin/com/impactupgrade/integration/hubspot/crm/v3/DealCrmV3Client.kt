@@ -18,7 +18,10 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
 
   private val log: Logger = LogManager.getLogger(DealCrmV3Client::class.java)
 
-  fun read(id: String, customProperties: Collection<String> = listOf()): Deal? {
+  // for Java callers
+  fun read(id: String, customProperties: Collection<String> = listOf()) = read(id, customProperties, 0)
+
+  fun read(id: String, customProperties: Collection<String> = listOf(), attemptCount: Int = 0): Deal? {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(DealProperties::class.declaredMemberProperties.map { p -> p.name })
@@ -37,12 +40,14 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        // TODO: retry?
-        log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
-        null
+        val retryFunction = { newAttemptCount: Int -> read(id, customProperties, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, null)
       }
     }
   }
+
+  // for Java callers
+  fun batchRead(ids: List<String>, customProperties: Collection<String> = listOf())  = batchRead(ids, customProperties, 0)
 
   fun batchRead(ids: List<String>, customProperties: Collection<String> = listOf(), attemptCount: Int = 0): DealBatchResults {
     val hasIds = ids.map { HasId(it) }
@@ -70,6 +75,9 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     }
   }
 
+  // for Java callers
+  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf()) = search(filters, customProperties, 0)
+
   fun search(filters: List<Filter>, customProperties: Collection<String> = listOf(), attemptCount: Int = 0): DealResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
@@ -95,7 +103,10 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     }
   }
 
-  fun insert(properties: DealProperties): Deal? {
+  // for Java callers
+  fun insert(properties: DealProperties) = insert(properties, 0)
+
+  fun insert(properties: DealProperties, attemptCount: Int = 0): Deal? {
     val deal = Deal(null, properties)
     log.info("inserting deal: {}", deal)
     val response = target
@@ -109,16 +120,18 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        // TODO: retry?
-        log.error("HubSpot API error {}: {}", response.status, response.readEntity(String::class.java))
-        null
+        val retryFunction = { newAttemptCount: Int -> insert(properties, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, null)
       }
     }
   }
 
+  // for Java callers
+  fun update(id: String, properties: DealProperties) = update(id, properties, 0)
+
   // TODO: Switched to using JDK's HttpClient -- having issues with Jersey, PATCH fixes, and Java 16 now preventing reflection on private modules.
   //  Update this lib-wide, but isolating here for the moment.
-  fun update(id: String, properties: DealProperties): Deal? {
+  fun update(id: String, properties: DealProperties, attemptCount: Int = 0): Deal? {
     val deal = Deal(null, properties)
     log.info("updating deal: {}", deal)
 
@@ -136,9 +149,8 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        // TODO: retry?
-        log.error("HubSpot API error {}: {}", response.statusCode(), response.body())
-        null
+        val retryFunction = { newAttemptCount: Int -> update(id, properties, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, null)
       }
     }
   }
