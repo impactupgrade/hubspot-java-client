@@ -8,6 +8,7 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import javax.ws.rs.core.Response
 import kotlin.reflect.full.declaredMemberProperties
 
 class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
@@ -36,13 +37,14 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
+        // TODO: retry?
         log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
         null
       }
     }
   }
 
-  fun batchRead(ids: List<String>, customProperties: Collection<String> = listOf()): DealBatchResults {
+  fun batchRead(ids: List<String>, customProperties: Collection<String> = listOf(), attemptCount: Int = 0): DealBatchResults {
     val hasIds = ids.map { HasId(it) }
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
@@ -62,13 +64,13 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
-        DealBatchResults(listOf())
+        val retryFunction = { newAttemptCount: Int -> batchRead(ids, customProperties, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, DealBatchResults(listOf()))
       }
     }
   }
 
-  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf()): DealResults {
+  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf(), attemptCount: Int = 0): DealResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(DealProperties::class.declaredMemberProperties.map { p -> p.name })
@@ -87,8 +89,8 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.readEntity(String::class.java))
-        DealResults(0, listOf())
+        val retryFunction = { newAttemptCount: Int -> search(filters, customProperties, newAttemptCount) }
+        handleError(response, attemptCount, retryFunction, DealResults(0, listOf()))
       }
     }
   }
@@ -107,7 +109,8 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.status, response.readEntity(String::class.java))
+        // TODO: retry?
+        log.error("HubSpot API error {}: {}", response.status, response.readEntity(String::class.java))
         null
       }
     }
@@ -133,7 +136,8 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        log.warn("HubSpot API error {}: {}", response.statusCode(), response.body())
+        // TODO: retry?
+        log.error("HubSpot API error {}: {}", response.statusCode(), response.body())
         null
       }
     }

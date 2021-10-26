@@ -96,7 +96,7 @@ data class DealProperties(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class Deal(var id:String? = null, val properties: DealProperties)
+data class Deal(var id: String? = null, val properties: DealProperties)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class DealBatchResults(val results: List<Deal>)
@@ -113,3 +113,6 @@ data class FormContext(
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Form(val fields: List<FormField>, var context: FormContext? = null)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class ApiError(var status: String? = null, var message: String? = null, var correlationId: String? = null, var category: String? = null)
