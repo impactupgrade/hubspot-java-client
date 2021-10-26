@@ -5,7 +5,7 @@ public class EngagementRequest implements AbstractModel  {
   private long id;
   private Engagement engagement;
   private EngagementAssociations associations;
-  private EngagementNoteMetadata metadata;
+  private EngagementMetadata metadata;
 
   public long getId() {
     return id;
@@ -31,11 +31,11 @@ public class EngagementRequest implements AbstractModel  {
     this.associations = associations;
   }
 
-  public EngagementNoteMetadata getMetadata() {
+  public EngagementMetadata getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(EngagementNoteMetadata metadata) {
+  public void setMetadata(EngagementMetadata metadata) {
     this.metadata = metadata;
   }
 
