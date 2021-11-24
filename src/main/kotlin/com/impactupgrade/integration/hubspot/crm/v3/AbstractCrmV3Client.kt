@@ -36,7 +36,7 @@ abstract class AbstractCrmV3Client(
         retryFunction(newAttemptCount)
       }
     } else {
-      log.error("HubSpot API error {}: {}", response.readEntity(String::class.java))
+      log.error("HubSpot API error {}: {}", errorEntity)
       failureResult
     }
   }
