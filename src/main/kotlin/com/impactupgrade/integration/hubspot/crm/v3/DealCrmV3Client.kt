@@ -76,13 +76,13 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
   }
 
   // for Java callers
-  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf()) = search(filters, customProperties, 0)
+  fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf()) = search(filterGroups, customProperties, 0)
 
-  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf(), attemptCount: Int = 0): DealResults {
+  fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf(), attemptCount: Int = 0): DealResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(DealProperties::class.declaredMemberProperties.map { p -> p.name })
-    val search = Search(listOf(FilterGroup(filters)), properties)
+    val search = Search(filterGroups, properties)
     log.info("searching deals: {}", search)
 
     val response = target
@@ -97,7 +97,7 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        val retryFunction = { newAttemptCount: Int -> search(filters, customProperties, newAttemptCount) }
+        val retryFunction = { newAttemptCount: Int -> search(filterGroups, customProperties, newAttemptCount) }
         handleError(response, attemptCount, retryFunction, DealResults(0, listOf()))
       }
     }

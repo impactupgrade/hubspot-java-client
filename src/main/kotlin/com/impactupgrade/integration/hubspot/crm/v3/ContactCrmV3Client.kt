@@ -48,18 +48,14 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
   }
 
   // for Java callers
-  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf()) = search(filters, customProperties, 0)
+  fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf()) = search(filterGroups, customProperties, 0)
 
   // ex: Filter("email", "EQ", email)
-  fun search(filters: List<Filter>, customProperties: Collection<String> = listOf(), attemptCount: Int = 0): ContactResults {
+  fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf(), attemptCount: Int = 0): ContactResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(ContactProperties::class.declaredMemberProperties.map { p -> p.name })
-    val search = Search(listOf(
-      FilterGroup(
-        filters
-      )
-    ), properties)
+    val search = Search(filterGroups, properties)
     log.info("searching contacts: {}", search)
 
     val response = target
@@ -74,7 +70,7 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         responseEntity
       }
       else -> {
-        val retryFunction = { newAttemptCount: Int -> search(filters, customProperties, newAttemptCount) }
+        val retryFunction = { newAttemptCount: Int -> search(filterGroups, customProperties, newAttemptCount) }
         handleError(response, attemptCount, retryFunction, ContactResults(0, listOf()))
       }
     }
@@ -82,10 +78,22 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
 
   // provide commonly-used searches
   fun searchByEmail(email: String, customProperties: Collection<String> = listOf()) =
-    search(listOf(Filter("email", "EQ", email)), customProperties, 0)
+    // https://community.hubspot.com/t5/APIs-Integrations/Search-Contacts-for-Secondary-Mail/td-p/358756
+    search(
+      listOf(
+        FilterGroup(listOf(Filter("email", "EQ", email))),
+        FilterGroup(listOf(Filter("hs_additional_emails", "CONTAINS_TOKEN", email)))
+      ),
+      customProperties
+    )
   fun searchByPhone(phone: String, customProperties: Collection<String> = listOf()) =
     // TODO: Also need to include mobilephone?
-    search(listOf(Filter("phone", "EQ", normalizePhoneNumber(phone))), customProperties, 0)
+    search(
+      listOf(
+        FilterGroup(listOf(Filter("phone", "EQ", normalizePhoneNumber(phone))))
+      ),
+      customProperties
+    )
 
   // for Java callers
   fun insert(properties: ContactProperties) = insert(properties, 0)
