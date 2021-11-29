@@ -31,8 +31,8 @@ abstract class AbstractCrmV3Client(
         failureResult
       } else {
         val newAttemptCount = attemptCount + 1
-        log.info("HubSpot API hit rate limit; retry {}/5 in 3 sec", newAttemptCount)
-        Thread.sleep(3000)
+        log.info("HubSpot API hit rate limit; retry {}/5 in 5 sec", newAttemptCount)
+        Thread.sleep(5000)
         retryFunction(newAttemptCount)
       }
     } else {
@@ -50,8 +50,8 @@ abstract class AbstractCrmV3Client(
         failureResult
       } else {
         val newAttemptCount = attemptCount + 1
-        log.info("HubSpot API hit rate limit; retry {}/5 in 3 sec", newAttemptCount)
-        Thread.sleep(3000)
+        log.info("HubSpot API hit rate limit; retry {}/5 in 5 sec", newAttemptCount)
+        Thread.sleep(5000)
         retryFunction(newAttemptCount)
       }
     } else {
