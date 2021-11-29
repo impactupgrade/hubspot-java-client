@@ -32,7 +32,7 @@ class AssociationCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       }
       else -> {
         val retryFunction = { newAttemptCount: Int -> search(fromType, fromId, toType, newAttemptCount) }
-        handleError(response, attemptCount, retryFunction, AssociationSearchResults(listOf()))
+        handleError(response, attemptCount, retryFunction)
       }
     }
   }
@@ -55,7 +55,7 @@ class AssociationCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       .post(Entity.entity(associationBatch, MediaType.APPLICATION_JSON_TYPE))
     if (response.status >= 300) {
       val retryFunction = { newAttemptCount: Int -> insert(fromType, fromId, toType, toId, newAttemptCount) }
-      handleError(response, attemptCount, retryFunction, Unit)
+      handleError(response, attemptCount, retryFunction)
     } else {
       log.info("HubSpot API response {}: {}", response.status, response.readEntity(String::class.java))
     }

@@ -1,15 +1,13 @@
 package com.impactupgrade.integration.hubspot.crm.v3
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.paranamer.ParanamerModule
-import javax.ws.rs.client.Entity
-import javax.ws.rs.core.MediaType
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import javax.ws.rs.client.Entity
+import javax.ws.rs.core.MediaType
 import kotlin.reflect.full.declaredMemberProperties
 
 class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
@@ -42,7 +40,7 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       }
       else -> {
         val retryFunction = { newAttemptCount: Int -> read(id, customProperties, newAttemptCount) }
-        handleError(response, attemptCount, retryFunction, null)
+        handleError(response, attemptCount, retryFunction)
       }
     }
   }
@@ -71,7 +69,7 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       }
       else -> {
         val retryFunction = { newAttemptCount: Int -> search(filterGroups, customProperties, newAttemptCount) }
-        handleError(response, attemptCount, retryFunction, ContactResults(0, listOf()))
+        handleError(response, attemptCount, retryFunction)
       }
     }
   }
@@ -113,7 +111,7 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       }
       else -> {
         val retryFunction = { newAttemptCount: Int -> insert(properties, newAttemptCount) }
-        handleError(response, attemptCount, retryFunction, null)
+        handleError(response, attemptCount, retryFunction)
       }
     }
   }
@@ -142,7 +140,7 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       }
       else -> {
         val retryFunction = { newAttemptCount: Int -> update(id, properties, newAttemptCount) }
-        handleError(response, attemptCount, retryFunction, null)
+        handleError(response, attemptCount, retryFunction)
       }
     }
   }

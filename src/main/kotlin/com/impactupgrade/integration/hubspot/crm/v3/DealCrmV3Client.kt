@@ -41,7 +41,7 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       }
       else -> {
         val retryFunction = { newAttemptCount: Int -> read(id, customProperties, newAttemptCount) }
-        handleError(response, attemptCount, retryFunction, null)
+        handleError(response, attemptCount, retryFunction)
       }
     }
   }
@@ -70,7 +70,7 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       }
       else -> {
         val retryFunction = { newAttemptCount: Int -> batchRead(ids, customProperties, newAttemptCount) }
-        handleError(response, attemptCount, retryFunction, DealBatchResults(listOf()))
+        handleError(response, attemptCount, retryFunction)
       }
     }
   }
@@ -98,7 +98,7 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       }
       else -> {
         val retryFunction = { newAttemptCount: Int -> search(filterGroups, customProperties, newAttemptCount) }
-        handleError(response, attemptCount, retryFunction, DealResults(0, listOf()))
+        handleError(response, attemptCount, retryFunction)
       }
     }
   }
@@ -121,7 +121,7 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       }
       else -> {
         val retryFunction = { newAttemptCount: Int -> insert(properties, newAttemptCount) }
-        handleError(response, attemptCount, retryFunction, null)
+        handleError(response, attemptCount, retryFunction)
       }
     }
   }
@@ -150,7 +150,7 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       }
       else -> {
         val retryFunction = { newAttemptCount: Int -> update(id, properties, newAttemptCount) }
-        handleError(response, attemptCount, retryFunction, null)
+        handleError(response, attemptCount, retryFunction)
       }
     }
   }

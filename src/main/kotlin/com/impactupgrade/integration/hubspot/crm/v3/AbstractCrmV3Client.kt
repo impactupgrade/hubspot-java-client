@@ -8,6 +8,7 @@ import org.glassfish.jersey.client.HttpUrlConnectorProvider
 import java.net.http.HttpResponse
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.core.Response
+import kotlin.jvm.Throws
 
 abstract class AbstractCrmV3Client(
   protected val apiKey: String,
@@ -23,12 +24,12 @@ abstract class AbstractCrmV3Client(
 
   protected val objectMapper: ObjectMapper = ObjectMapper().registerModule(ParanamerModule())
 
-  protected fun <T: Any?> handleError(response: Response, attemptCount: Int, retryFunction: (Int) -> T, failureResult: T): T {
+  protected fun <T: Any?> handleError(response: Response, attemptCount: Int, retryFunction: (Int) -> T): T {
     val errorEntity = response.readEntity(ApiError::class.java)
     return if (errorEntity.category == "RATE_LIMITS") {
       if (attemptCount == 5) {
         log.error("HubSpot API hit rate limit; exhausted retries")
-        failureResult
+        throw RuntimeException("HubSpot API hit rate limit; exhausted retries")
       } else {
         val newAttemptCount = attemptCount + 1
         log.info("HubSpot API hit rate limit; retry {}/5 in 5 sec", newAttemptCount)
@@ -36,18 +37,18 @@ abstract class AbstractCrmV3Client(
         retryFunction(newAttemptCount)
       }
     } else {
-      log.error("HubSpot API error {}: {}", errorEntity)
-      failureResult
+      log.error("HubSpot API error: {}", errorEntity)
+      throw RuntimeException("HubSpot API error: $errorEntity")
     }
   }
 
-  protected fun <T: Any?> handleError(response: HttpResponse<String>, attemptCount: Int, retryFunction: (Int) -> T, failureResult: T): T {
+  protected fun <T: Any?> handleError(response: HttpResponse<String>, attemptCount: Int, retryFunction: (Int) -> T): T {
     val body = response.body()
     val errorEntity = objectMapper.readValue(body, ApiError::class.java)
     return if (errorEntity.category == "RATE_LIMITS") {
       if (attemptCount == 5) {
         log.error("HubSpot API hit rate limit; exhausted retries")
-        failureResult
+        throw RuntimeException("HubSpot API hit rate limit; exhausted retries")
       } else {
         val newAttemptCount = attemptCount + 1
         log.info("HubSpot API hit rate limit; retry {}/5 in 5 sec", newAttemptCount)
@@ -55,8 +56,8 @@ abstract class AbstractCrmV3Client(
         retryFunction(newAttemptCount)
       }
     } else {
-      log.error("HubSpot API error {}: {}", body)
-      failureResult
+      log.error("HubSpot API error: {}", body)
+      throw RuntimeException("HubSpot API error: $errorEntity")
     }
   }
 }
