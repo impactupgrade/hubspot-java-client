@@ -9,16 +9,26 @@ import java.util.Calendar
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class BatchRead(
-    val inputs: List<HasId>,
-    val properties: List<String>
+  val inputs: List<HasId>,
+  val properties: List<String>
 )
 
 data class Search(
-    val filterGroups: List<FilterGroup>,
-    val properties: List<String>
+  val filterGroups: List<FilterGroup>,
+  val properties: List<String>,
+  val after: Int = 0,
+  // always use the max
+  val limit: Int = 100
 )
 data class FilterGroup(val filters: List<Filter>)
 data class Filter(val propertyName: String, val operator: String, val value: String)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class Next(var after: String? = null)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class Paging(var next: Next? = null)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class HasId(val id: String)
@@ -89,7 +99,6 @@ data class DealProperties(
   @JsonProperty("recurring_revenue_deal_type") var recurringRevenueDealType: String? = null,
   @JsonProperty("recurring_revenue_inactive_date") var recurringRevenueInactiveDate: Calendar? = null,
   @JsonProperty("recurring_revenue_inactive_reason") var recurringRevenueInactiveReason: String? = null,
-  var associatedcompanyid: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
   @get:JsonAnyGetter @JsonAnySetter val otherProperties: Map<String, Any> = mutableMapOf(),
 )
@@ -102,7 +111,8 @@ data class Deal(var id: String? = null, val properties: DealProperties)
 data class DealBatchResults(val results: List<Deal>)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class DealResults(val total: Int, val results: List<Deal>)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class DealResults(val total: Int, val results: List<Deal>, var paging: Paging? = null)
 
 data class FormField(val name: String, val value: String)
 data class FormContext(
