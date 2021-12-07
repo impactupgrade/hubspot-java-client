@@ -24,16 +24,13 @@ class AssociationCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
       .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
-    return when (response.status) {
-      200 -> {
-        val responseEntity = response.readEntity(AssociationSearchResults::class.java)
-        log.info("HubSpot API response {}: {}", response.status, responseEntity)
-        responseEntity
-      }
-      else -> {
-        val retryFunction = { newAttemptCount: Int -> search(fromType, fromId, toType, newAttemptCount) }
-        handleError(response, attemptCount, retryFunction)
-      }
+    return if (response.status < 300) {
+      val responseEntity = response.readEntity(AssociationSearchResults::class.java)
+      log.info("HubSpot API response {}: {}", response.status, responseEntity)
+      responseEntity
+    } else {
+      val retryFunction = { newAttemptCount: Int -> search(fromType, fromId, toType, newAttemptCount) }
+      handleError(response, attemptCount, retryFunction)
     }
   }
 
