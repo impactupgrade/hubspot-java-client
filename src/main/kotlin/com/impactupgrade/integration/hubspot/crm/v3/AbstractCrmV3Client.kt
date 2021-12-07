@@ -25,7 +25,8 @@ abstract class AbstractCrmV3Client(
   protected val objectMapper: ObjectMapper = ObjectMapper().registerModule(ParanamerModule())
 
   protected fun <T: Any?> handleError(response: Response, attemptCount: Int, retryFunction: (Int) -> T): T {
-    val errorEntity = response.readEntity(ApiError::class.java)
+    val body = response.readEntity(String::class.java)
+    val errorEntity = objectMapper.readValue(body, ApiError::class.java)
     return if (errorEntity.category == "RATE_LIMITS") {
       if (attemptCount == 5) {
         log.error("HubSpot API hit rate limit; exhausted retries")
@@ -37,8 +38,8 @@ abstract class AbstractCrmV3Client(
         retryFunction(newAttemptCount)
       }
     } else {
-      log.error("HubSpot API error: {}", errorEntity)
-      throw RuntimeException("HubSpot API error: $errorEntity")
+      log.error("HubSpot API error {}: {}", response.status, body)
+      throw RuntimeException("HubSpot API error: $body")
     }
   }
 
@@ -56,8 +57,8 @@ abstract class AbstractCrmV3Client(
         retryFunction(newAttemptCount)
       }
     } else {
-      log.error("HubSpot API error: {}", body)
-      throw RuntimeException("HubSpot API error: $errorEntity")
+      log.error("HubSpot API error {}: {}", response.statusCode(), body)
+      throw RuntimeException("HubSpot API error: $body")
     }
   }
 }
