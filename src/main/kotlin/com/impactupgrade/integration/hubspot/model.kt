@@ -21,7 +21,8 @@ data class Search(
   val limit: Int = 100
 )
 data class FilterGroup(val filters: List<Filter>)
-data class Filter(val propertyName: String, val operator: String, val value: String)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class Filter(val propertyName: String, val operator: String, var value: String? = null)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
