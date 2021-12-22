@@ -37,6 +37,9 @@ abstract class AbstractCrmV3Client(
         Thread.sleep(5000)
         retryFunction(newAttemptCount)
       }
+    } else if (errorEntity.category == "VALIDATION_ERROR") {
+      log.warn("HubSpot API failed due to invalid data: {}", errorEntity.message)
+      throw HubSpotException("HubSpot API failed due to invalid data: " + errorEntity.message)
     } else {
       log.error("HubSpot API error {}: {}", response.status, body)
       throw RuntimeException("HubSpot API error: $body")
@@ -56,6 +59,9 @@ abstract class AbstractCrmV3Client(
         Thread.sleep(5000)
         retryFunction(newAttemptCount)
       }
+    } else if (errorEntity.category == "VALIDATION_ERROR") {
+      log.warn("HubSpot API failed due to invalid data: {}", errorEntity.message)
+      throw HubSpotException("HubSpot API failed due to invalid data: " + errorEntity.message)
     } else {
       log.error("HubSpot API error {}: {}", response.statusCode(), body)
       throw RuntimeException("HubSpot API error: $body")

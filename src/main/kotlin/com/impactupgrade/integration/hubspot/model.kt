@@ -127,3 +127,5 @@ data class Form(val fields: List<FormField>, var context: FormContext? = null)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ApiError(var status: String? = null, var message: String? = null, var correlationId: String? = null, var category: String? = null)
+
+class HubSpotException(message: String) : Exception(message)
