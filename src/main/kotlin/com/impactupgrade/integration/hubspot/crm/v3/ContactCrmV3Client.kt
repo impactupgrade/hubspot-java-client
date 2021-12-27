@@ -79,7 +79,8 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     // https://community.hubspot.com/t5/APIs-Integrations/Search-Contacts-for-Secondary-Mail/td-p/358756
     search(
       listOf(
-        FilterGroup(listOf(Filter("email", "EQ", email))),
+        // EQ is case-sensitive!
+        FilterGroup(listOf(Filter("email", "EQ", email.lowercase()))),
         FilterGroup(listOf(Filter("hs_additional_emails", "CONTAINS_TOKEN", email)))
       ),
       customProperties
