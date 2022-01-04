@@ -32,7 +32,7 @@
   <properties>
     <version.jersey>2.34</version.jersey>
     <version.kotlin>1.5.31</version.kotlin>
-    <version.log4j>2.17.0</version.log4j>
+    <version.log4j>2.17.1</version.log4j>
 
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
   </properties>
