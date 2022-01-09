@@ -58,4 +58,28 @@ class AssociationCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       log.info("HubSpot API response {}: {}", response.status, response.readEntity(String::class.java))
     }
   }
+
+  // for Java callers
+  fun delete(fromType: String, fromId: String, toType: String, toId: String) = delete(fromType, fromId, toType, toId, 0)
+
+  /**
+   * This one's a little odd. The API requires the from and to object types to be defined on the path,
+   * but also requires the type to be given within each batch input. For now, assume one at a time, just to be safe.
+   */
+  fun delete(fromType: String, fromId: String, toType: String, toId: String, attemptCount: Int = 0) {
+    val association = AssociationInsertInput(HasId(fromId), HasId(toId), fromType + "_to_" + toType)
+    val associationBatch = AssociationInsertBatch(listOf(association))
+    log.info("deleting association: {}", associationBatch)
+    val response = target
+      .path(fromType).path(toType).path("batch").path("archive")
+      .queryParam("hapikey", apiKey)
+      .request(MediaType.APPLICATION_JSON)
+      .post(Entity.entity(associationBatch, MediaType.APPLICATION_JSON_TYPE))
+    if (response.status >= 300) {
+      val retryFunction = { newAttemptCount: Int -> delete(fromType, fromId, toType, toId, newAttemptCount) }
+      handleError(response, attemptCount, retryFunction)
+    } else {
+      log.info("HubSpot API response {}: {}", response.status, response.readEntity(String::class.java))
+    }
+  }
 }
