@@ -1,5 +1,6 @@
 package com.impactupgrade.integration.hubspot.crm.v3
 
+import com.impactupgrade.integration.hubspot.*
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import javax.ws.rs.client.Entity

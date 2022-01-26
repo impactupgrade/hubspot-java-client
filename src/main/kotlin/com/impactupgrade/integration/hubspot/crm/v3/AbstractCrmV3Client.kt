@@ -2,6 +2,8 @@ package com.impactupgrade.integration.hubspot.crm.v3
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.paranamer.ParanamerModule
+import com.impactupgrade.integration.hubspot.ApiError
+import com.impactupgrade.integration.hubspot.HubSpotException
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.glassfish.jersey.client.HttpUrlConnectorProvider

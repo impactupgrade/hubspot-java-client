@@ -1,6 +1,6 @@
 package com.impactupgrade.integration.hubspot.form.v3
 
-import com.impactupgrade.integration.hubspot.crm.v3.Form
+import com.impactupgrade.integration.hubspot.Form
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import javax.ws.rs.client.ClientBuilder

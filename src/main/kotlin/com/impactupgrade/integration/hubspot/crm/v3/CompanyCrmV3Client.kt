@@ -2,6 +2,7 @@ package com.impactupgrade.integration.hubspot.crm.v3
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.paranamer.ParanamerModule
+import com.impactupgrade.integration.hubspot.*
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import java.net.URI

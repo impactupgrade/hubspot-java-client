@@ -1,4 +1,4 @@
-package com.impactupgrade.integration.hubspot.crm.v3
+package com.impactupgrade.integration.hubspot
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -53,7 +53,7 @@ data class CompanyProperties(
   var country: String? = null,
   var description: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
-  @get:JsonAnyGetter @JsonAnySetter val otherProperties: Map<String, Any> = mutableMapOf(),
+  @get:JsonAnyGetter @JsonAnySetter val otherProperties: Map<String, Any> = hashMapOf(),
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -77,7 +77,7 @@ data class ContactProperties(
   var country: String? = null,
   var associatedcompanyid: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
-  @get:JsonAnyGetter @JsonAnySetter val otherProperties: Map<String, Any> = mutableMapOf(),
+  @get:JsonAnyGetter @JsonAnySetter val otherProperties: Map<String, Any> = hashMapOf(),
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -101,7 +101,7 @@ data class DealProperties(
   @JsonProperty("recurring_revenue_inactive_date") var recurringRevenueInactiveDate: Calendar? = null,
   @JsonProperty("recurring_revenue_inactive_reason") var recurringRevenueInactiveReason: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
-  @get:JsonAnyGetter @JsonAnySetter val otherProperties: Map<String, Any> = mutableMapOf(),
+  @get:JsonAnyGetter @JsonAnySetter val otherProperties: Map<String, Any> = hashMapOf(),
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
