@@ -1,6 +1,9 @@
 package com.impactupgrade.integration.hubspot.crm.v3
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.paranamer.ParanamerModule
 import com.impactupgrade.integration.hubspot.ApiError
 import com.impactupgrade.integration.hubspot.HubSpotException
@@ -10,7 +13,9 @@ import org.glassfish.jersey.client.HttpUrlConnectorProvider
 import java.net.http.HttpResponse
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.core.Response
-import kotlin.jvm.Throws
+import javax.ws.rs.ext.ContextResolver
+import javax.ws.rs.ext.Provider
+
 
 abstract class AbstractCrmV3Client(
   protected val apiKey: String,
@@ -20,11 +25,10 @@ abstract class AbstractCrmV3Client(
   private val log: Logger = LogManager.getLogger(AbstractCrmV3Client::class.java)
 
   protected val target = ClientBuilder.newBuilder().build()
-    // forces Jersey to allow PATCH methods
-    .property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)
-    .target("https://api.hubapi.com").path(path)
-
-  protected val objectMapper: ObjectMapper = ObjectMapper().registerModule(ParanamerModule())
+      .register(JacksonConfig::class.java)
+      // forces Jersey to allow PATCH methods
+      .property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)
+      .target("https://api.hubapi.com").path(path)
 
   protected fun <T: Any?> handleError(response: Response, attemptCount: Int, retryFunction: (Int) -> T): T {
     val body = response.readEntity(String::class.java)
@@ -67,6 +71,23 @@ abstract class AbstractCrmV3Client(
     } else {
       log.error("HubSpot API error {}: {}", response.statusCode(), body)
       throw RuntimeException("HubSpot API error: $body")
+    }
+  }
+
+  companion object {
+    @JvmStatic
+    protected val objectMapper: ObjectMapper = ObjectMapper()
+        .registerModule(ParanamerModule())
+        .registerModule(KotlinModule())
+        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        .disable(DeserializationFeature.FAIL_ON_NULL_CREATOR_PROPERTIES)
+        .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+  }
+
+  @Provider
+  class JacksonConfig : ContextResolver<ObjectMapper> {
+    override fun getContext(aClass: Class<*>?): ObjectMapper {
+      return objectMapper
     }
   }
 }

@@ -3,11 +3,9 @@ package com.impactupgrade.integration.hubspot
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Calendar
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 data class BatchRead(
   val inputs: List<HasId>,
   val properties: List<String>
@@ -21,14 +19,9 @@ data class Search(
   val limit: Int = 100
 )
 data class FilterGroup(val filters: List<Filter>)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class Filter(val propertyName: String, val operator: String, var value: String? = null)
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class Next(var after: String? = null)
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class Paging(var next: Next? = null)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -43,7 +36,6 @@ data class AssociationSearchResults(val results: List<AssociationSearchResult>)
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class AssociationSearchResult(val from: HasId, val to: List<HasId>)
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class CompanyProperties(
   var name: String? = null,
   var address: String? = null,
@@ -53,17 +45,14 @@ data class CompanyProperties(
   var country: String? = null,
   var description: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
-  @get:JsonAnyGetter @JsonAnySetter val otherProperties: Map<String, Any> = hashMapOf(),
-)
+) {
+  @get:JsonAnyGetter @JsonAnySetter val otherProperties: MutableMap<String, String> = mutableMapOf()
+}
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class Company(var id:String? = null, val properties: CompanyProperties)
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 data class CompanyResults(val total: Int, val results: List<Company>)
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class ContactProperties(
   var firstname: String? = null,
   var lastname: String? = null,
@@ -77,18 +66,15 @@ data class ContactProperties(
   var country: String? = null,
   var associatedcompanyid: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
-  @get:JsonAnyGetter @JsonAnySetter val otherProperties: Map<String, Any> = hashMapOf(),
-)
+) {
+  @get:JsonAnyGetter @JsonAnySetter val otherProperties: MutableMap<String, String> = mutableMapOf()
+}
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class Contact(var id:String? = null, val properties: ContactProperties)
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 data class ContactResults(val total: Int, val results: List<Contact>)
 
 // TODO: campaign
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class DealProperties(
   var amount: Double? = null,
   var closedate: Calendar? = null, // TODO: expects 2019-12-07T16:50:06.678Z, so test this
@@ -101,18 +87,14 @@ data class DealProperties(
   @JsonProperty("recurring_revenue_inactive_date") var recurringRevenueInactiveDate: Calendar? = null,
   @JsonProperty("recurring_revenue_inactive_reason") var recurringRevenueInactiveReason: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
-  @get:JsonAnyGetter @JsonAnySetter val otherProperties: Map<String, Any> = hashMapOf(),
-)
+) {
+  @get:JsonAnyGetter @JsonAnySetter val otherProperties: MutableMap<String, String> = mutableMapOf()
+}
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class Deal(var id: String? = null, val properties: DealProperties)
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 data class DealBatchResults(val results: List<Deal>)
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class DealResults(val total: Int, val results: List<Deal>, var paging: Paging? = null)
 
 data class FormField(val name: String, val value: String)
@@ -122,10 +104,8 @@ data class FormContext(
   var pageUri: String? = null,
   var pageName: String? = null
 )
-@JsonIgnoreProperties(ignoreUnknown = true)
 data class Form(val fields: List<FormField>, var context: FormContext? = null)
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 data class ApiError(var status: String? = null, var message: String? = null, var correlationId: String? = null, var category: String? = null)
 
 class HubSpotException(message: String) : Exception(message)
