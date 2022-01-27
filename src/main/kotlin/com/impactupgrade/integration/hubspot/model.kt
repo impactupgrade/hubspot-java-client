@@ -46,7 +46,7 @@ data class CompanyProperties(
   var description: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
 ) {
-  @get:JsonAnyGetter @JsonAnySetter val otherProperties: MutableMap<String, String> = mutableMapOf()
+  @get:JsonAnyGetter @JsonAnySetter val otherProperties: MutableMap<String, Object> = mutableMapOf()
 }
 
 data class Company(var id:String? = null, val properties: CompanyProperties)
@@ -67,7 +67,7 @@ data class ContactProperties(
   var associatedcompanyid: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
 ) {
-  @get:JsonAnyGetter @JsonAnySetter val otherProperties: MutableMap<String, String> = mutableMapOf()
+  @get:JsonAnyGetter @JsonAnySetter val otherProperties: MutableMap<String, Object> = mutableMapOf()
 }
 
 data class Contact(var id:String? = null, val properties: ContactProperties)
@@ -88,7 +88,7 @@ data class DealProperties(
   @JsonProperty("recurring_revenue_inactive_reason") var recurringRevenueInactiveReason: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
 ) {
-  @get:JsonAnyGetter @JsonAnySetter val otherProperties: MutableMap<String, String> = mutableMapOf()
+  @get:JsonAnyGetter @JsonAnySetter val otherProperties: MutableMap<String, Object> = mutableMapOf()
 }
 
 data class Deal(var id: String? = null, val properties: DealProperties)
