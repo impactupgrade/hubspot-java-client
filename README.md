@@ -1,10 +1,10 @@
 # hubspot-java-client
 
-A work-in-progress Java wrapper around the HubSpot API, including a mix of V1 and V3 endpoints. This one is in its early stages, but significant attention is in the works!
+A work-in-progress Java wrapper around the HubSpot API, including a mix of V1 and V3 endpoints.
 
 ## Impact Upgrade
 
-Nonprofits often struggle with 1) constant distractions, 2) a tangled mess of data and tools that hold them back, and 3) really big ideas on the backburner. [Impact Upgrade](https://www.impactupgrade.com) is a software and consulting company, solely focused on closing these gaps. We upgrade your impact and get you back to your mission!
+[Impact Upgrade](https://www.impactupgrade.com) is a tech and operations consulting company that solely partners with nonprofits and for-good businesses. We make the complex simple, focusing on back-office operations and making big ideas a reality. Don't fight a multiple-front battle! You know your mission. We know tech.
 
 ## Usage
 
