@@ -76,10 +76,10 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     }
   }
 
-  // for Java callers
   fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf()) = search(filterGroups, customProperties, "0", 0)
+  fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf(), after: String) = search(filterGroups, customProperties, after, 0)
 
-  fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf(), after: String, attemptCount: Int): DealResults {
+  private fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf(), after: String, attemptCount: Int): DealResults {
     val properties = mutableListOf<String>()
     properties.addAll(customProperties)
     properties.addAll(DealProperties::class.declaredMemberProperties.map { p -> p.name })

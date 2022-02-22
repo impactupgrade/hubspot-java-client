@@ -51,7 +51,7 @@ data class CompanyProperties(
 
 data class Company(var id:String? = null, val properties: CompanyProperties)
 
-data class CompanyResults(val total: Int, val results: List<Company>)
+data class CompanyResults(val total: Int, val results: List<Company>, var paging: Paging? = null)
 
 data class ContactProperties(
   var firstname: String? = null,
@@ -72,7 +72,7 @@ data class ContactProperties(
 
 data class Contact(var id:String? = null, val properties: ContactProperties)
 
-data class ContactResults(val total: Int, val results: List<Contact>)
+data class ContactResults(val total: Int, val results: List<Contact>, var paging: Paging? = null)
 
 // TODO: campaign
 data class DealProperties(

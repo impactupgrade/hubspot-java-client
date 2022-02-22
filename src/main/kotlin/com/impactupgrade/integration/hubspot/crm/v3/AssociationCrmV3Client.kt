@@ -13,7 +13,6 @@ class AssociationCrmV3Client(apiKey: String) : AbstractCrmV3Client(
 
   private val log: Logger = LogManager.getLogger(AssociationCrmV3Client::class.java)
 
-  // for Java callers
   fun search(fromType: String, fromId: String, toType: String) = search(fromType, fromId, toType, 0)
 
   fun search(fromType: String, fromId: String, toType: String, attemptCount: Int = 0): AssociationSearchResults {
