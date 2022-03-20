@@ -1,7 +1,5 @@
 package com.impactupgrade.integration.hubspot.crm.v3
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.paranamer.ParanamerModule
 import com.impactupgrade.integration.hubspot.*
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -51,6 +49,22 @@ class CompanyCrmV3Client(apiKey: String) : AbstractCrmV3Client(
 
   fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf()) = search(filterGroups, customProperties, "0", 0)
   fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf(), after: String) = search(filterGroups, customProperties, after, 0)
+  fun searchAutoPaging(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf()): List<Company> {
+    val companies = mutableListOf<Company>()
+
+    var after: String? = "0"
+    while (!after.isNullOrBlank()) {
+      val companyResults = search(filterGroups, customProperties, after)
+      companies.addAll(companyResults.results)
+      after = if (companyResults.paging != null && companyResults.paging?.next != null) {
+        companyResults.paging?.next?.after;
+      } else {
+        null
+      }
+    }
+
+    return companies
+  }
 
   private fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf(), after: String, attemptCount: Int): CompanyResults {
     val properties = mutableListOf<String>()

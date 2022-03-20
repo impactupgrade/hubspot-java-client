@@ -9,7 +9,6 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import javax.ws.rs.core.Response
 import kotlin.reflect.full.declaredMemberProperties
 
 class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
@@ -78,6 +77,22 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
 
   fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf()) = search(filterGroups, customProperties, "0", 0)
   fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf(), after: String) = search(filterGroups, customProperties, after, 0)
+  fun searchAutoPaging(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf()): List<Deal> {
+    val deals = mutableListOf<Deal>()
+
+    var after: String? = "0"
+    while (!after.isNullOrBlank()) {
+      val dealResults = search(filterGroups, customProperties, after)
+      deals.addAll(dealResults.results)
+      after = if (dealResults.paging != null && dealResults.paging?.next != null) {
+        dealResults.paging?.next?.after;
+      } else {
+        null
+      }
+    }
+
+    return deals
+  }
 
   private fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf(), after: String, attemptCount: Int): DealResults {
     val properties = mutableListOf<String>()

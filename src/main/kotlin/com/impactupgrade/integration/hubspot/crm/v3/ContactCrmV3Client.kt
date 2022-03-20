@@ -48,6 +48,22 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
 
   fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf()) = search(filterGroups, customProperties, "0", 0)
   fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf(), after: String) = search(filterGroups, customProperties, after, 0)
+  fun searchAutoPaging(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf()): List<Contact> {
+    val contacts = mutableListOf<Contact>()
+
+    var after: String? = "0"
+    while (!after.isNullOrBlank()) {
+      val contactResults = search(filterGroups, customProperties, after)
+      contacts.addAll(contactResults.results)
+      after = if (contactResults.paging != null && contactResults.paging?.next != null) {
+        contactResults.paging?.next?.after;
+      } else {
+        null
+      }
+    }
+
+    return contacts
+  }
 
   // ex: Filter("email", "EQ", email)
   private fun search(filterGroups: List<FilterGroup>, customProperties: Collection<String> = listOf(), after: String, attemptCount: Int): ContactResults {
