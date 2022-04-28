@@ -66,6 +66,7 @@ data class ContactProperties(
   var country: String? = null,
   var associatedcompanyid: String? = null,
   @JsonProperty("hubspot_owner_id") var ownerId: String? = null,
+  @JsonProperty("hs_language") var language: String? = null,
 ) {
   @get:JsonAnyGetter @JsonAnySetter val otherProperties: MutableMap<String, Object> = mutableMapOf()
 }

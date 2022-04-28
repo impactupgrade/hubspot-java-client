@@ -56,6 +56,7 @@ public class ContactListV1Client extends AbstractV1Client {
         .queryParam("property", "email")
         .queryParam("property", "phone")
         .queryParam("property", "mobilephone")
+        .queryParam("property", "hs_language")
         .request(MediaType.APPLICATION_JSON)
         .get(ContactArray.class);
 

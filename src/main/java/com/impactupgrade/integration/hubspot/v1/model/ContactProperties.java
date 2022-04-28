@@ -17,6 +17,8 @@ public class ContactProperties implements AbstractModel {
   private HasValue<String> country;
   @JsonProperty("associatedcompanyid")
   private HasValue<String> companyId;
+  @JsonProperty("hs_language")
+  private HasValue<String> language;
 
   public HasValue<String> getFirstname() {
     return firstname;
@@ -102,6 +104,14 @@ public class ContactProperties implements AbstractModel {
 
   public void setCompanyId(HasValue<String> companyId) { this.companyId = companyId; }
 
+  public HasValue<String> getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(HasValue<String> language) {
+    this.language = language;
+  }
+
   @Override
   public String toString() {
     return "ContactProperties{" +
@@ -116,6 +126,7 @@ public class ContactProperties implements AbstractModel {
         ", zip=" + zip +
         ", country=" + country +
         ", companyId=" + companyId +
+        ", language=" + language +
         '}';
   }
 }
