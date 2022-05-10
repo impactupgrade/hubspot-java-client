@@ -8,7 +8,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 @Deprecated
 public class ContactListV1Client extends AbstractV1Client {
@@ -41,28 +43,33 @@ public class ContactListV1Client extends AbstractV1Client {
   }
 
   @Deprecated
-  public ContactArray getContactsInList(long listId) {
-    return getContactsInList(listId, 0);
+  public ContactArray getContactsInList(long listId, Collection<String> customProperties) {
+    return getContactsInList(listId, customProperties, 0);
   }
 
-  private ContactArray getContactsInList(long listId, long offset) {
+  private ContactArray getContactsInList(long listId, Collection<String> customProperties, long offset) {
+    Collection<String> properties = new ArrayList<>();
+    properties.add("firstname");
+    properties.add("lastname");
+    properties.add("email");
+    properties.add("phone");
+    properties.add("mobilephone");
+    properties.add("hs_language");
+    if (customProperties != null) {
+      properties.addAll(customProperties);
+    }
     ContactArray contactArray = listsTarget
         .path(listId + "/contacts/all")
         .queryParam("hapikey", apiKey)
         .queryParam("count", 100)
         .queryParam("vidOffset", offset)
-        .queryParam("property", "firstname")
-        .queryParam("property", "lastname")
-        .queryParam("property", "email")
-        .queryParam("property", "phone")
-        .queryParam("property", "mobilephone")
-        .queryParam("property", "hs_language")
+        .queryParam("property", properties.toArray())
         .request(MediaType.APPLICATION_JSON)
         .get(ContactArray.class);
 
     if (contactArray.isHasMore()) {
       // iterate through all remaining pages
-      contactArray.getContacts().addAll(getContactsInList(listId, contactArray.getOffset()).getContacts());
+      contactArray.getContacts().addAll(getContactsInList(listId, customProperties, contactArray.getOffset()).getContacts());
     }
 
     return contactArray;

@@ -1,6 +1,10 @@
 package com.impactupgrade.integration.hubspot.v1.model;
 
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ContactProperties implements AbstractModel {
 
@@ -19,6 +23,9 @@ public class ContactProperties implements AbstractModel {
   private HasValue<String> companyId;
   @JsonProperty("hs_language")
   private HasValue<String> language;
+
+  @JsonAnySetter
+  private Map<String, HasValue<String>> otherProperties = new HashMap<>();
 
   public HasValue<String> getFirstname() {
     return firstname;
@@ -112,6 +119,10 @@ public class ContactProperties implements AbstractModel {
     this.language = language;
   }
 
+  public Map<String, HasValue<String>> getOtherProperties() {
+    return otherProperties;
+  }
+
   @Override
   public String toString() {
     return "ContactProperties{" +
@@ -119,7 +130,7 @@ public class ContactProperties implements AbstractModel {
         ", lastname=" + lastname +
         ", email=" + email +
         ", phone=" + phone +
-        ", mobile_phone=" + mobilePhone +
+        ", mobilePhone=" + mobilePhone +
         ", address=" + address +
         ", city=" + city +
         ", state=" + state +
@@ -127,6 +138,7 @@ public class ContactProperties implements AbstractModel {
         ", country=" + country +
         ", companyId=" + companyId +
         ", language=" + language +
+        ", otherProperties=" + otherProperties +
         '}';
   }
 }
