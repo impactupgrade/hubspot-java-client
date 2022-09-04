@@ -171,6 +171,43 @@ data class ImportCancelResponse(
   var links: MutableMap<String, String> ?= mutableMapOf()
 )
 
+data class PropertyOption(
+  var label: String? = null,
+  var value: String? = null,
+  var displayOrder: Int? = null,
+  var hidden: Boolean? = null
+)
+
+data class Property(
+  var name: String? = null,
+  var label: String? = null,
+  var type: String? = null,
+  var fieldType: String? = null,
+  var groupName: String? = null,
+
+  var description: String? = null,
+  var options: List<PropertyOption>? = null,
+  var updatedAt: Calendar? = null,
+  var createdAt: Calendar? = null,
+  var createdUserId: String? = null,
+  var updatedUserId: String? = null,
+  var displayOrder: Int? = null,
+  var calculated: Boolean? = null,
+  var externalOptions: Boolean? = null,
+  var archived: Boolean? = null,
+  var hasUniqueValue: Boolean? = null,
+  var hidden: Boolean? = null,
+  var showCurrencySymbol: Boolean? = null,
+  var formField: Boolean? = null,
+  @get:JsonAnyGetter @JsonAnySetter val modificationMetadata: Map<String, Any> = mutableMapOf()
+)
+
+data class PropertyBatchCreateRequest(
+  val inputs: List<Property>? = null
+)
+
+data class PropertiesResponse(var status: String? = null, val results: List<Property>)
+
 data class ApiError(var status: String? = null, var message: String? = null, var correlationId: String? = null, var category: String? = null)
 
 class HubSpotException(message: String) : Exception(message)

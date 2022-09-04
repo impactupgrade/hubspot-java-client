@@ -7,4 +7,5 @@ class HubSpotCrmV3Client(private val apiKey: String) {
   fun contact() = ContactCrmV3Client(apiKey)
   fun deal() = DealCrmV3Client(apiKey)
   fun imports() = ImportsCrmV3Client(apiKey)
+  fun properties() = PropertiesCrmV3Client(apiKey)
 }
