@@ -10,6 +10,7 @@ import com.impactupgrade.integration.hubspot.HubSpotException
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.glassfish.jersey.client.HttpUrlConnectorProvider
+import org.glassfish.jersey.media.multipart.MultiPartFeature
 import java.net.http.HttpResponse
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.core.Response
@@ -26,6 +27,7 @@ abstract class AbstractCrmV3Client(
 
   protected val target = ClientBuilder.newBuilder().build()
       .register(JacksonConfig::class.java)
+      .register(MultiPartFeature::class.java)
       // forces Jersey to allow PATCH methods
       .property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)
       .target("https://api.hubapi.com").path(path)
