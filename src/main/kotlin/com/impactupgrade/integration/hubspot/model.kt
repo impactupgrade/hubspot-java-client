@@ -107,6 +107,58 @@ data class FormContext(
 )
 data class Form(val fields: List<FormField>, var context: FormContext? = null)
 
+data class ImportRequest(
+  var name: String? = null,
+  var files: List<ImportFile>? = null
+)
+
+data class ImportFile(
+  var fileName: String? = null,
+  var fileFormat: String? = null,
+  var dateFormat: String? = null,
+  var fileImportPage: FileImportPage? = null
+)
+
+data class FileImportPage(
+  var hasHeader: Boolean? = null,
+  var columnMappings: List<ColumnMapping>? = null
+)
+
+data class ColumnMapping(
+  var columnObjectTypeId: String? = null,
+  var columnName: String? = null,
+  var propertyName: String? = null,
+  var idColumnType: String? = null
+)
+
+data class ImportResponse(
+  var id: String? = null,
+  var state: String? = null,
+  var optOutImport: Boolean? = null,
+  var metadata: ImportMetadata? = null,
+
+  var updatedAt: Calendar? = null,
+  var createdAt: Calendar? = null,
+)
+
+data class ImportMetadata(
+  var counters: ImportCounters? = null,
+  var objectLists: List<ImportObjectList>? = null,
+  var fileIds: List<String>? = null
+)
+
+data class ImportObjectList(
+  var objectType: String? = null,
+  var listId: String? = null
+)
+
+data class ImportCounters(
+  @JsonProperty("PROPERTY_VALUES_EMITTED") var propertyValuesEmitted: Int? = null,
+  @JsonProperty("TOTAL_ROWS") var totalRows: Int? = null,
+  @JsonProperty("UNIQUE_OBJECTS_WRITTEN") var uniqueObjectsWritten: Int? = null,
+  @JsonProperty("CREATED_OBJECTS") var createdObjects: Int? = null
+)
+
 data class ApiError(var status: String? = null, var message: String? = null, var correlationId: String? = null, var category: String? = null)
 
 class HubSpotException(message: String) : Exception(message)
