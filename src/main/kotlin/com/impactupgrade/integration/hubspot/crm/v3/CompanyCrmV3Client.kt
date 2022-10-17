@@ -29,11 +29,11 @@ class CompanyCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("fetching company {}: {}", id, properties)
 
     val response = target
-      .path(id)
-      .queryParam("hapikey", apiKey)
-      .queryParam("properties", properties.joinToString(","))
-      .request(MediaType.APPLICATION_JSON)
-      .get()
+        .path(id)
+        .queryParam("properties", properties.joinToString(","))
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .get()
     return when (response.status) {
       200 -> {
         val responseEntity = response.readEntity(Company::class.java)
@@ -74,10 +74,10 @@ class CompanyCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("searching companies: {}", search)
 
     val response = target
-      .path("search")
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
+        .path("search")
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
     return when (response.status) {
       200 -> {
         val responseEntity = response.readEntity(CompanyResults::class.java)
@@ -107,9 +107,9 @@ class CompanyCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     val company = Company(null, properties)
     log.info("inserting company: {}", company)
     val response = target
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .post(Entity.entity(company, MediaType.APPLICATION_JSON_TYPE))
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .post(Entity.entity(company, MediaType.APPLICATION_JSON_TYPE))
     return when (response.status) {
       201 -> {
         val responseEntity = response.readEntity(Company::class.java)
@@ -155,10 +155,10 @@ class CompanyCrmV3Client(apiKey: String) : AbstractCrmV3Client(
   fun delete(id: String) {
     log.info("deleting company: {}", id)
     val response = target
-      .path(id)
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .delete()
+        .path(id)
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .delete()
     log.info("HubSpot API response: {}", response.status)
   }
 }

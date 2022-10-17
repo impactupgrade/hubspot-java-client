@@ -26,9 +26,9 @@ class ImportsCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("fetching active imports")
 
     val response = target
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .get()
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .get()
     return when (response.status) {
       200 -> {
         val responseEntity = response.readEntity(ImportsResponse::class.java)
@@ -54,9 +54,9 @@ class ImportsCrmV3Client(apiKey: String) : AbstractCrmV3Client(
         .bodyPart(filePart);
 
     val response = target
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .post(Entity.entity(formDataMultiPart, MediaType.MULTIPART_FORM_DATA))
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .post(Entity.entity(formDataMultiPart, MediaType.MULTIPART_FORM_DATA))
     return when (response.status) {
       200 -> {
         val responseEntity = response.readEntity(ImportResponse::class.java)
@@ -77,10 +77,10 @@ class ImportsCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("fetching import {}", importId)
 
     val response = target
-      .path(importId)
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .get()
+        .path(importId)
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .get()
     return when (response.status) {
       200 -> {
         val responseEntity = response.readEntity(ImportResponse::class.java)
@@ -101,11 +101,11 @@ class ImportsCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("canceling import {}", importId)
 
     val response = target
-      .path(importId)
-      .path("cancel")
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .post(null)
+        .path(importId)
+        .path("cancel")
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .post(null)
     return when (response.status) {
       200 -> {
         val responseEntity = response.readEntity(ImportCancelResponse::class.java)

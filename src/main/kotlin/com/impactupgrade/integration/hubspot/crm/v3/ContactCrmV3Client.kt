@@ -28,11 +28,11 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("fetching contact {}: {}", id, properties)
 
     val response = target
-      .path(id)
-      .queryParam("hapikey", apiKey)
-      .queryParam("properties", properties.joinToString(","))
-      .request(MediaType.APPLICATION_JSON)
-      .get()
+        .path(id)
+        .queryParam("properties", properties.joinToString(","))
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .get()
     return when (response.status) {
       200 -> {
         val responseEntity = response.readEntity(Contact::class.java)
@@ -74,10 +74,10 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("searching contacts: {}", search)
 
     val response = target
-      .path("search")
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
+        .path("search")
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
     return when (response.status) {
       200 -> {
         val responseEntity = response.readEntity(ContactResults::class.java)
@@ -118,9 +118,9 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     val contact = Contact(null, properties)
     log.info("inserting contact: {}", contact)
     val response = target
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .post(Entity.entity(contact, MediaType.APPLICATION_JSON_TYPE))
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .post(Entity.entity(contact, MediaType.APPLICATION_JSON_TYPE))
     return when (response.status) {
       201 -> {
         val responseEntity = response.readEntity(Contact::class.java)
@@ -166,10 +166,10 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
   fun delete(id: String) {
     log.info("deleting contact: {}", id)
     val response = target
-      .path(id)
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .delete()
+        .path(id)
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .delete()
     log.info("HubSpot API response: {}", response.status)
   }
 }

@@ -27,8 +27,8 @@ public class ContactV1Client extends AbstractV1Client {
   public Contact getById(String id) {
     return contactsTarget
         .path("contact/vid/" + id + "/profile")
-        .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer " + apiKey)
         .get(Contact.class);
   }
 
@@ -36,8 +36,8 @@ public class ContactV1Client extends AbstractV1Client {
   public Contact getByEmail(String email) {
     return contactsTarget
         .path("contact/email/" + email + "/profile")
-        .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer " + apiKey)
         .get(Contact.class);
   }
 
@@ -46,8 +46,8 @@ public class ContactV1Client extends AbstractV1Client {
     return contactsTarget
         .path("contact/emails/batch/")
         .queryParam("email", emails.toArray())
-        .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer " + apiKey)
         .get(String.class);
   }
 
@@ -56,8 +56,8 @@ public class ContactV1Client extends AbstractV1Client {
     return contactsTarget
         .path("search/query")
         .queryParam("q", q)
-        .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer " + apiKey)
         .get(ContactArray.class);
   }
 
@@ -65,8 +65,8 @@ public class ContactV1Client extends AbstractV1Client {
   public Contact insert(ContactBuilder contactBuilder) throws DuplicateContactException, HubSpotException {
     Response response = contactsTarget
         .path("contact")
-        .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer " + apiKey)
         .post(Entity.entity(contactBuilder.build(), MediaType.APPLICATION_JSON));
 
     if (response.getStatus() == 409) {
@@ -87,8 +87,8 @@ public class ContactV1Client extends AbstractV1Client {
 
     Response response = contactsTarget
         .path("contact/email/" + email + "/profile")
-        .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer " + apiKey)
         .post(Entity.entity(req, MediaType.APPLICATION_JSON));
 
     return response.readEntity(Contact.class);
@@ -100,8 +100,8 @@ public class ContactV1Client extends AbstractV1Client {
 
     Response response = contactsTarget
         .path("contact/vid/" + id + "/profile")
-        .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer " + apiKey)
         .post(Entity.entity(req, MediaType.APPLICATION_JSON));
     return response.readEntity(Contact.class);
   }

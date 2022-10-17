@@ -28,11 +28,11 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("fetching deal {}: {}", id, properties)
 
     val response = target
-      .path(id)
-      .queryParam("hapikey", apiKey)
-      .queryParam("properties", properties.joinToString(","))
-      .request(MediaType.APPLICATION_JSON)
-      .get()
+        .path(id)
+        .queryParam("properties", properties.joinToString(","))
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .get()
     return when (response.status) {
       200 -> {
         val responseEntity = response.readEntity(Deal::class.java)
@@ -58,10 +58,10 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("batch reading deals: {}", batchRead)
 
     val response = target
-      .path("batch/read")
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .post(Entity.entity<Any>(batchRead, MediaType.APPLICATION_JSON))
+        .path("batch/read")
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .post(Entity.entity<Any>(batchRead, MediaType.APPLICATION_JSON))
     return when (response.status) {
       200 -> {
         val responseEntity = response.readEntity(DealBatchResults::class.java)
@@ -102,10 +102,10 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("searching deals: {}", search)
 
     val response = target
-      .path("search")
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
+        .path("search")
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
     return when (response.status) {
       200 -> {
         val responseEntity = response.readEntity(DealResults::class.java)
@@ -126,9 +126,9 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     val deal = Deal(null, properties)
     log.info("inserting deal: {}", deal)
     val response = target
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .post(Entity.entity(deal, MediaType.APPLICATION_JSON_TYPE))
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .post(Entity.entity(deal, MediaType.APPLICATION_JSON_TYPE))
     return when (response.status) {
       201 -> {
         val responseEntity = response.readEntity(Deal::class.java)
@@ -174,10 +174,10 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
   fun delete(id: String) {
     log.info("deleting deal: {}", id)
     val response = target
-      .path(id)
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .delete()
+        .path(id)
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .delete()
     log.info("HubSpot API response: {}", response.status)
   }
 }

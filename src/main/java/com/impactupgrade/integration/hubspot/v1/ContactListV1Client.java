@@ -28,10 +28,10 @@ public class ContactListV1Client extends AbstractV1Client {
 
   private ContactListArray getAll(long offset) {
     ContactListArray contactListArray = listsTarget
-        .queryParam("hapikey", apiKey)
         .queryParam("count", 250)
         .queryParam("offset", offset)
         .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer " + apiKey)
         .get(ContactListArray.class);
 
     if (contactListArray.isHasMore()) {
@@ -60,11 +60,11 @@ public class ContactListV1Client extends AbstractV1Client {
     }
     ContactArray contactArray = listsTarget
         .path(listId + "/contacts/all")
-        .queryParam("hapikey", apiKey)
         .queryParam("count", 100)
         .queryParam("vidOffset", offset)
         .queryParam("property", properties.toArray())
         .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer " + apiKey)
         .get(ContactArray.class);
 
     if (contactArray.isHasMore()) {
@@ -82,8 +82,8 @@ public class ContactListV1Client extends AbstractV1Client {
 
     Response response = listsTarget
         .path(listId + "/add")
-        .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer " + apiKey)
         .post(Entity.entity(vidsRequest, MediaType.APPLICATION_JSON));
     System.out.println(response.readEntity(String.class));
     return response.getStatus() == 200;
@@ -96,8 +96,8 @@ public class ContactListV1Client extends AbstractV1Client {
 
     Response response = listsTarget
         .path(listId + "/remove")
-        .queryParam("hapikey", apiKey)
         .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer " + apiKey)
         .post(Entity.entity(vidsRequest, MediaType.APPLICATION_JSON));
     System.out.println(response.readEntity(String.class));
     return response.getStatus() == 200;

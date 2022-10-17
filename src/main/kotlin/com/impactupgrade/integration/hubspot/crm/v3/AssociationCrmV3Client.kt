@@ -20,10 +20,10 @@ class AssociationCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("searching associations: {} {} {}", fromType, search, toType)
 
     val response = target
-      .path(fromType).path(toType).path("batch").path("read")
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
+        .path(fromType).path(toType).path("batch").path("read")
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .post(Entity.entity<Any>(search, MediaType.APPLICATION_JSON))
     return if (response.status < 300) {
       val responseEntity = response.readEntity(AssociationSearchResults::class.java)
       log.info("HubSpot API response {}: {}", response.status, responseEntity)
@@ -46,10 +46,10 @@ class AssociationCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     val associationBatch = AssociationInsertBatch(listOf(association))
     log.info("inserting association: {}", associationBatch)
     val response = target
-      .path(fromType).path(toType).path("batch").path("create")
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .post(Entity.entity(associationBatch, MediaType.APPLICATION_JSON_TYPE))
+        .path(fromType).path(toType).path("batch").path("create")
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .post(Entity.entity(associationBatch, MediaType.APPLICATION_JSON_TYPE))
     if (response.status >= 300) {
       val retryFunction = { newAttemptCount: Int -> insert(fromType, fromId, toType, toId, newAttemptCount) }
       handleError(response, attemptCount, retryFunction)
@@ -70,10 +70,10 @@ class AssociationCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     val associationBatch = AssociationInsertBatch(listOf(association))
     log.info("deleting association: {}", associationBatch)
     val response = target
-      .path(fromType).path(toType).path("batch").path("archive")
-      .queryParam("hapikey", apiKey)
-      .request(MediaType.APPLICATION_JSON)
-      .post(Entity.entity(associationBatch, MediaType.APPLICATION_JSON_TYPE))
+        .path(fromType).path(toType).path("batch").path("archive")
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer $apiKey")
+        .post(Entity.entity(associationBatch, MediaType.APPLICATION_JSON_TYPE))
     if (response.status >= 300) {
       val retryFunction = { newAttemptCount: Int -> delete(fromType, fromId, toType, toId, newAttemptCount) }
       handleError(response, attemptCount, retryFunction)
