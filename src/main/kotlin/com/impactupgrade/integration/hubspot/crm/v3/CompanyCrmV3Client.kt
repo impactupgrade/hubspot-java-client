@@ -95,7 +95,7 @@ class CompanyCrmV3Client(apiKey: String) : AbstractCrmV3Client(
   fun searchByName(name: String, customProperties: Collection<String> = listOf()) =
     search(
       listOf(
-        FilterGroup(listOf(Filter("name", "CONTAINS_TOKEN", name)))
+        FilterGroup(listOf(Filter("name", "CONTAINS_TOKEN", "*$name*")))
       ),
       customProperties
     )
@@ -133,9 +133,10 @@ class CompanyCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("updating company: {}", company)
 
     val request: HttpRequest = HttpRequest.newBuilder()
-        .uri(URI.create("https://api.hubapi.com/crm/v3/objects/companies/$id?hapikey=$apiKey"))
+        .uri(URI.create("https://api.hubapi.com/crm/v3/objects/companies/$id"))
         .header("Content-Type", "application/json")
         .method("PATCH", HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(company)))
+        .header("Authorization", "Bearer $apiKey")
         .build()
     val response: HttpResponse<String> = HttpClient.newBuilder().build().send(request, HttpResponse.BodyHandlers.ofString())
 

@@ -152,9 +152,10 @@ class DealCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("updating deal: {}", deal)
 
     val request: HttpRequest = HttpRequest.newBuilder()
-        .uri(URI.create("https://api.hubapi.com/crm/v3/objects/deals/$id?hapikey=$apiKey"))
+        .uri(URI.create("https://api.hubapi.com/crm/v3/objects/deals/$id"))
         .header("Content-Type", "application/json")
         .method("PATCH", HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(deal)))
+        .header("Authorization", "Bearer $apiKey")
         .build()
     val response: HttpResponse<String> = HttpClient.newBuilder().build().send(request, HttpResponse.BodyHandlers.ofString())
 

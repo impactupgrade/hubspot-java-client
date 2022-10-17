@@ -96,20 +96,27 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     // https://community.hubspot.com/t5/APIs-Integrations/Search-Contacts-for-Secondary-Mail/td-p/358756
     search(
       listOf(
-        // email is case sensitive and HS auto lower cases is
+        // email is case-sensitive and HS auto lower cases is
         FilterGroup(listOf(Filter("email", "EQ", email.lowercase()))),
-        FilterGroup(listOf(Filter("hs_additional_emails", "CONTAINS_TOKEN", email.lowercase())))
+        FilterGroup(listOf(Filter("hs_additional_emails", "CONTAINS_TOKEN", "*" + email.lowercase() + "*")))
       ),
       customProperties
     )
-  fun searchByPhone(phone: String, customProperties: Collection<String> = listOf()) =
-    // TODO: Also need to include mobilephone?
-    search(
-      listOf(
-        FilterGroup(listOf(Filter("phone", "EQ", normalizePhoneNumber(phone))))
-      ),
-      customProperties
+  fun searchByPhone(phone: String, customProperties: Collection<String> = listOf()): ContactResults {
+    var normalizedPhone = phone.replace("+1", "").filter { it.isDigit() }
+    if (phone.length == 11) {
+      normalizedPhone = normalizedPhone.substring(1)
+    }
+    normalizedPhone = "*" + normalizedPhone.substring(0, 3) + "*" + normalizedPhone.substring(3, 6) + "*" + normalizedPhone.substring(6) + "*"
+    println("normalizedPhone: $normalizedPhone")
+    return search(
+        listOf(
+            FilterGroup(listOf(Filter("phone", "CONTAINS_TOKEN", normalizedPhone))),
+            FilterGroup(listOf(Filter("mobilephone", "CONTAINS_TOKEN", normalizedPhone)))
+        ),
+        customProperties
     )
+  }
 
   // for Java callers
   fun insert(properties: ContactProperties) = insert(properties, 0)
@@ -144,9 +151,10 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("updating contact: {}", contact)
 
     val request: HttpRequest = HttpRequest.newBuilder()
-        .uri(URI.create("https://api.hubapi.com/crm/v3/objects/contacts/$id?hapikey=$apiKey"))
+        .uri(URI.create("https://api.hubapi.com/crm/v3/objects/contacts/$id"))
         .header("Content-Type", "application/json")
         .method("PATCH", HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(contact)))
+        .header("Authorization", "Bearer $apiKey")
         .build()
     val response: HttpResponse<String> = HttpClient.newBuilder().build().send(request, HttpResponse.BodyHandlers.ofString())
 
