@@ -26,8 +26,8 @@ class PropertiesCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     log.info("inserting property: {}", property)
     val response = target
       .path(objectType)
-      .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
+      .header("Authorization", "Bearer $apiKey")
       .post(Entity.entity(property, MediaType.APPLICATION_JSON_TYPE))
     return when (response.status) {
       201 -> {
@@ -51,8 +51,8 @@ class PropertiesCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     val response = target
       .path(objectType)
       .path(propertyName)
-      .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
+      .header("Authorization", "Bearer $apiKey")
       .get()
     return when (response.status) {
       200 -> {
@@ -100,8 +100,8 @@ class PropertiesCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     val response = target
       .path(objectType)
       .path(propertyName)
-      .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
+      .header("Authorization", "Bearer $apiKey")
       .delete()
     log.info("HubSpot API response: {}", response.status)
   }
@@ -114,8 +114,8 @@ class PropertiesCrmV3Client(apiKey: String) : AbstractCrmV3Client(
 
     val response = target
       .path(objectType)
-      .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
+      .header("Authorization", "Bearer $apiKey")
       .get()
     return when (response.status) {
       200 -> {
@@ -138,8 +138,8 @@ class PropertiesCrmV3Client(apiKey: String) : AbstractCrmV3Client(
     val batchRequest = PropertyBatchCreateRequest(properties)
     val response = target
       .path(objectType + "/batch/create")
-      .queryParam("hapikey", apiKey)
       .request(MediaType.APPLICATION_JSON)
+      .header("Authorization", "Bearer $apiKey")
       .post(Entity.entity(batchRequest, MediaType.APPLICATION_JSON_TYPE))
     return when (response.status) {
       201 -> {
