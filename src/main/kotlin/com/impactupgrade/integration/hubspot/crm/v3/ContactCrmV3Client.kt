@@ -98,7 +98,8 @@ class ContactCrmV3Client(apiKey: String) : AbstractCrmV3Client(
       listOf(
         // email is case-sensitive and HS auto lower cases is
         FilterGroup(listOf(Filter("email", "EQ", email.lowercase()))),
-        FilterGroup(listOf(Filter("hs_additional_emails", "CONTAINS_TOKEN", "*" + email.lowercase() + "*")))
+        // IMPORTANT: hs_additional_emails does not appear to support wildcards with CONTAINS_TOKEN. Pass in only the email.
+        FilterGroup(listOf(Filter("hs_additional_emails", "CONTAINS_TOKEN", email.lowercase())))
       ),
       customProperties
     )
