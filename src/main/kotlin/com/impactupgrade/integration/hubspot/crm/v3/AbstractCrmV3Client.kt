@@ -35,7 +35,7 @@ abstract class AbstractCrmV3Client(
   protected fun <T: Any?> handleError(response: Response, attemptCount: Int, retryFunction: (Int) -> T): T {
     val body = response.readEntity(String::class.java)
     val errorEntity = objectMapper.readValue(body, ApiError::class.java)
-    return if (errorEntity.category == "RATE_LIMITS") {
+    return if (errorEntity.errorType == "RATE_LIMIT" || errorEntity.category == "RATE_LIMITS") {
       if (attemptCount == 5) {
         log.error("HubSpot API hit rate limit; exhausted retries")
         throw RuntimeException("HubSpot API hit rate limit; exhausted retries")

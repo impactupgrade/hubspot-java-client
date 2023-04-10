@@ -208,6 +208,6 @@ data class PropertyBatchCreateRequest(
 
 data class PropertiesResponse(var status: String? = null, val results: List<Property>)
 
-data class ApiError(var status: String? = null, var message: String? = null, var correlationId: String? = null, var category: String? = null)
+data class ApiError(var status: String? = null, var message: String? = null, var errorType: String? = null, var correlationId: String? = null, var category: String? = null)
 
 class HubSpotException(message: String) : Exception(message)
